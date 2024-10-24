@@ -1,0 +1,139 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Table Styles */
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+
+.users-table th, .users-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.users-table th {
+    background-color: #4A90E2;
+    color: white;
+    font-size: 16px;
+}
+
+
+
+/* Admin Button Styles */
+.admin-btn {
+    padding: 10px 15px;
+    background-color: #2979ae;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.admin-delete-btn {
+    padding: 10px 15px;
+    background-color: #b81616;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.admin-delete-btn:hover{
+    background-color: #e16262;
+}
+.admin-btn:hover {
+    background-color: #095f9f;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    .users-table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+
+    .users-table thead {
+        display: none;
+    }
+
+    .users-table tbody tr {
+        display: block;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .users-table tbody tr td {
+        display: block;
+        text-align: right;
+        padding: 10px;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .users-table tbody tr td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .admin-btn {
+        width: 100%;
+    }
+}
+
+a {
+    display: inline-block; /* Treats the anchor as a block element */
+    padding: 10px 15px; /* Padding for spacing */
+    font-size: 14px; /* Font size */
+    font-weight: 600; /* Semi-bold text */
+    color: #4A90E2; /* Default text color */
+    text-decoration: none; /* Remove underline */
+    border: 2px solid transparent; /* Border for hover effect */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transitions */
+}
+
+/* Hover and Focus Styles */
+a:hover{
+    color: #fff; /* Change text color on hover */
+    background-color: #4A90E2; /* Background color on hover */
+    border-color: #357ABD; /* Border color on hover */
+    text-decoration: none;
+}
+
+/* Active Styles */
+a:active {
+    background-color: #357ABD; /* Darker shade when clicked */
+    transform: scale(0.98); /* Slightly shrink on click */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    a {
+        font-size: 16px; /* Larger font size on small screens */
+        padding: 12px 20px; /* More padding for easier touch targets */
+    }
+}
+

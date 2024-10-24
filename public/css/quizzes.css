@@ -1,0 +1,76 @@
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Make the body and html fill the full height */
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.quiz-section {
+    padding: 40px 20px; /* Padding for the section */
+    height: 100%;
+    flex: 1;
+}
+
+/* Container for the Section */
+.container {
+    max-width: 1200px; /* Max width for the container */
+    margin: 0 auto; /* Centering the container */
+}
+
+/* Grid for Quiz Cards */
+.quiz-grid {
+    display: grid; /* Using grid layout */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between cards */
+}
+
+/* Styles for Quiz Cards */
+.quiz-card {
+    background-color: #fff; /* White background for cards */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    padding: 20px; /* Padding inside cards */
+    transition: transform 0.3s, box-shadow 0.3s; /* Transition for hover effect */
+}
+
+/* Hover Effect for Quiz Cards */
+.quiz-card:hover {
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Title and Description in Quiz Cards */
+.quiz-card h3 {
+    font-size: 1.5rem; /* Title font size */
+    color: #4A90E2; /* Blue color for titles */
+    margin-bottom: 10px; /* Margin below the title */
+}
+
+.quiz-card p {
+    color: #666; /* Gray text for description */
+    margin-bottom: 20px; /* Margin below description */
+}
+
+/* Button Styles */
+.quiz-card button {
+    background-color: #4A90E2; /* Button background color */
+    color: white; /* Text color */
+    padding: 10px 15px; /* Button padding */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s, transform 0.2s; /* Transition for hover effect */
+}
+
+/* Hover Effect for Buttons */
+.quiz-card button:hover {
+    background-color: #357ABD; /* Darker shade on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
