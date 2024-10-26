@@ -27,7 +27,12 @@
                        <a href="{{route('quizzes.edit',$quiz->id)}}">View & Update</a>
                     </td>
                     <td>
-                        <a href="#">Delete</a>
+                        <form action="{{route('quiz.destroy', $quiz->id)}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this quiz?');">Delete</button>
+                        </form>
+                        
                     </td>
                 </tr>
             @endforeach

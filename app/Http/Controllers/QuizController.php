@@ -24,72 +24,138 @@ class QuizController extends Controller
         return view('quizzes.create');
     }
 
+    // public function createQuiz(Request $request)
+    // {
+    //     $validatedData = $request->validate([
+    //         'title' => 'required|string|max:255',
+    //         'subject' => 'required|string|max:255',
+    //         'questions' => 'required|array',
+    //         'questions.*.question_text' => 'required|string|max:255',
+    //         'questions.*.question_type' => 'required|in:multiple_choice,true_false,photo',
+    //         'questions.*.correct_answer' => 'required',
+    //         'questions.*.answers' => 'sometimes|array|min:2|max:4',
+    //         'questions.*.answers.*.answer_text' => 'required_if:questions.*.question_type,multiple_choice,photo|string|max:255',
+    //         'questions.*.photo' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // Validation for photo
+    //     ]);
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         // Create the Quiz
+    //         $quiz = Quiz::create([
+    //             'title' => $validatedData['title'],
+    //             'subject' => $validatedData['subject'],
+    //         ]);
+
+    //         foreach ($validatedData['questions'] as $questionData) {
+    //             // Initialize the photo path as null
+    //             $photoPath = null;
+
+    //             if ($questionData['question_type'] === 'true_false') {
+    //                 // Set is_true based on the user's input (either true or false)
+    //                 $isTrue = ($questionData['correct_answer'] === 'true') ? true : false;
+    //             }
+
+    //             // If the question type is 'photo', handle the image upload
+    //             if ($questionData['question_type'] === 'photo' && isset($questionData['photo'])) {
+    //                 $photoPath = $questionData['photo']->store('photos', 'public'); // Store the photo in the 'photos' directory in public storage
+    //             }
+
+
+    //             // Create the question
+    //             $question = $quiz->questions()->create([
+    //                 'question_text' => $questionData['question_text'],
+    //                 'question_type' => $questionData['question_type'],
+    //                 'photo' => $photoPath, // Save the photo path if it exists
+    //                 'is_true' => $isTrue,
+    //             ]);
+
+
+    //             // Create the answers if the question is not True/False
+    //             if ($questionData['question_type'] !== 'true_false') {
+    //                 foreach ($questionData['answers'] as $index => $answerData) {
+    //                     $question->answers()->create([
+    //                         'answer_text' => $answerData['answer_text'],
+    //                         'is_correct' => $index == $questionData['correct_answer'],
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         return redirect()->back()->with('success', 'Quiz created successfully!');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         return redirect()->back()->with('error', 'Error creating quiz.');
+    //     }
+    // }
     public function createQuiz(Request $request)
-    {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'subject' => 'required|string|max:255',
-            'questions' => 'required|array',
-            'questions.*.question_text' => 'required|string|max:255',
-            'questions.*.question_type' => 'required|in:multiple_choice,true_false,photo',
-            'questions.*.correct_answer' => 'required',
-            'questions.*.answers' => 'sometimes|array|min:2|max:4',
-            'questions.*.answers.*.answer_text' => 'required_if:questions.*.question_type,multiple_choice,photo|string|max:255',
-            'questions.*.photo' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // Validation for photo
+{
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'subject' => 'required|string|max:255',
+        'questions' => 'required|array',
+        'questions.*.question_text' => 'required|string|max:255',
+        'questions.*.question_type' => 'required|in:multiple_choice,true_false,photo',
+        'questions.*.correct_answer' => 'required',
+        'questions.*.answers' => 'required_if:questions.*.question_type,multiple_choice|required_if:questions.*.question_type,photo|array|min:2|max:4',
+        'questions.*.answers.*.answer_text' => 'required|string|max:255',
+        'questions.*.photo' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // Validation for photo
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // Create the Quiz
+        $quiz = Quiz::create([
+            'title' => $validatedData['title'],
+            'subject' => $validatedData['subject'],
         ]);
 
-        DB::beginTransaction();
+        foreach ($validatedData['questions'] as $questionData) {
+            // Initialize default values for optional fields
+            $photoPath = null;
+            $isTrue = null; // Initialize to default
 
-        try {
-            // Create the Quiz
-            $quiz = Quiz::create([
-                'title' => $validatedData['title'],
-                'subject' => $validatedData['subject'],
-            ]);
-
-            foreach ($validatedData['questions'] as $questionData) {
-                // Initialize the photo path as null
-                $photoPath = null;
-
-                if ($questionData['question_type'] === 'true_false') {
-                    // Set is_true based on the user's input (either true or false)
-                    $isTrue = ($questionData['correct_answer'] === 'true') ? true : false;
-                }
-
-                // If the question type is 'photo', handle the image upload
-                if ($questionData['question_type'] === 'photo' && isset($questionData['photo'])) {
-                    $photoPath = $questionData['photo']->store('photos', 'public'); // Store the photo in the 'photos' directory in public storage
-                }
-
-
-                // Create the question
-                $question = $quiz->questions()->create([
-                    'question_text' => $questionData['question_text'],
-                    'question_type' => $questionData['question_type'],
-                    'photo' => $photoPath, // Save the photo path if it exists
-                    'is_true' => $isTrue,
-                ]);
-
-
-                // Create the answers if the question is not True/False
-                if ($questionData['question_type'] !== 'true_false') {
-                    foreach ($questionData['answers'] as $index => $answerData) {
-                        $question->answers()->create([
-                            'answer_text' => $answerData['answer_text'],
-                            'is_correct' => $index == $questionData['correct_answer'],
-                        ]);
-                    }
-                }
+            // If the question type is 'true_false', handle is_true value
+            if ($questionData['question_type'] === 'true_false') {
+                $isTrue = ($questionData['correct_answer'] === 'true');
             }
 
-            DB::commit();
+            // If the question type is 'photo', handle the image upload
+            if ($questionData['question_type'] === 'photo' && isset($questionData['photo'])) {
+                $photoPath = $questionData['photo']->store('photos', 'public'); // Store the photo in the 'photos' directory in public storage
+            }
 
-            return redirect()->back()->with('success', 'Quiz created successfully!');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()->with('error', 'Error creating quiz.');
+            // Create the question
+            $question = $quiz->questions()->create([
+                'question_text' => $questionData['question_text'],
+                'question_type' => $questionData['question_type'],
+                'photo' => $photoPath, // Save the photo path if it exists
+                'is_true' => $isTrue,
+            ]);
+
+            // Create the answers if the question is not True/False
+            if ($questionData['question_type'] !== 'true_false') {
+                foreach ($questionData['answers'] as $index => $answerData) {
+                    $question->answers()->create([
+                        'answer_text' => $answerData['answer_text'],
+                        'is_correct' => $index == $questionData['correct_answer'],
+                    ]);
+                }
+            }
         }
+
+        DB::commit();
+
+        return redirect()->back()->with('success', 'Quiz created successfully!');
+    } catch (\Exception $e) {
+        DB::rollback();
+        return redirect()->back()->with('error', 'Error creating quiz.');
     }
+}
+
 
 
     public function show($id)
@@ -158,7 +224,7 @@ class QuizController extends Controller
     {
         $quiz = Quiz::findOrFail($id);
         $quiz->delete();
-        return redirect()->route('quizzes.index')->with('success', 'Quiz deleted successfully!');
+        return redirect()->route('admin-view-quizzes')->with('success', 'Quiz deleted successfully!');
     }
 
     public function viewAllQuizzes()

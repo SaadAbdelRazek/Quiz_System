@@ -19,17 +19,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [UserController::class, 'index'])->name('home');
-Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin-dashboard');
-Route::get('/admin-create-quiz', [QuizController::class, 'viewQuizForm'])->name('view-create-quiz');
 
 Route::middleware([
     'auth:sanctum',
+    'Admin',
     config('jetstream.auth_session'),
     'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    ])->group(function () {
+        // Route::get('/dashboard', function () {
+            //     return view('dashboard');
+            // })->name('dashboard');
+            Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin-dashboard');
+            Route::get('/admin-create-quiz', [QuizController::class, 'viewQuizForm'])->name('view-create-quiz');
+            Route::post('/create-quiz', [QuizController::class, 'createQuiz'])->name('create-quiz');
+            Route::delete('/admin-delete-quiz/{id}', [QuizController::class, 'destroy'])->name('quiz.destroy');
+
+            Route::get('/admin-view-users',[adminController::class, 'viewUsers'])->name('admin-view-users');
+            Route::delete('/admin-view-users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+            Route::get('/admin-view-quizzes',[QuizController::class, 'adminViewQuizzes'])->name('admin-view-quizzes');
+            Route::get('/admin-update-quiz/{id}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
+            Route::put('/admin-update-quiz/{id}', [QuizController::class, 'update'])->name('quizzes.update');
 });
 
 
@@ -41,14 +50,11 @@ Route::middleware([
 //Route::get('questions/{question}/answers/create', [AnswerController::class, 'create'])->name('answers.create');
 //Route::post('questions/{question}/answers', [AnswerController::class, 'store'])->name('answers.store');
 //Route::delete('questions/{question}/answers/{answer}', [AnswerController::class, 'destroy'])->name('answers.destroy');
-Route::post('/create-quiz', [QuizController::class, 'createQuiz'])->name('create-quiz');
+
 //----------------------------------------------------------
-Route::get('/admin-view-users',[adminController::class, 'viewUsers'])->name('admin-view-users');
-Route::delete('/admin-view-users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
 Route::get('/users/toggle-admin/{id}', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
-Route::get('/admin-view-quizzes',[QuizController::class, 'adminViewQuizzes'])->name('admin-view-quizzes');
-Route::get('/admin-update-quiz/{id}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
-Route::put('/admin-update-quiz/{id}', [QuizController::class, 'update'])->name('quizzes.update');
+
 //---------------------------------------------------------
 Route::get('/home/quizzes', [QuizController::class, 'viewAllQuizzes'])->name('quizzes');
 Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz');
