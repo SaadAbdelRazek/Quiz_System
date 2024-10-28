@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizzerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,8 +40,11 @@ Route::middleware([
             Route::get('/admin-view-quizzes',[QuizController::class, 'adminViewQuizzes'])->name('admin-view-quizzes');
             Route::get('/admin-update-quiz/{id}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
             Route::put('/admin-update-quiz/{id}', [QuizController::class, 'update'])->name('quizzes.update');
+            Route::put('/admin-update-quiz-activate/{id}', [QuizController::class, 'update_activate'])->name('update-quiz-activate');
+
 });
 
+Route::get('start_create_quiz/{user_id}', [QuizzerController::class, 'index'])->name('start_create_quiz');
 
 //Route::resource('quizzes', QuizController::class);
 //Route::get('quizzes/{quiz}/questions/create', [QuestionController::class, 'create'])->name('questions.create');

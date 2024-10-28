@@ -58,4 +58,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function quizzers()
+{
+    return $this->hasMany(Quizzer::class, 'user_id');
+}
 }

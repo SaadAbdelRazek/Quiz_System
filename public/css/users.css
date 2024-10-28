@@ -23,12 +23,12 @@ h1 {
 
 .users-table th, .users-table td {
     padding: 15px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
 }
 
 .users-table th {
-    background-color: #4A90E2;
+    background-color: #313335;
     color: white;
     font-size: 16px;
 }
