@@ -46,15 +46,6 @@ Route::middleware([
 
 Route::get('start_create_quiz/{user_id}', [QuizzerController::class, 'index'])->name('start_create_quiz');
 
-//Route::resource('quizzes', QuizController::class);
-//Route::get('quizzes/{quiz}/questions/create', [QuestionController::class, 'create'])->name('questions.create');
-//Route::post('quizzes/{quiz}/questions', [QuestionController::class, 'store'])->name('questions.store');
-//Route::delete('quizzes/{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
-//
-//Route::get('questions/{question}/answers/create', [AnswerController::class, 'create'])->name('answers.create');
-//Route::post('questions/{question}/answers', [AnswerController::class, 'store'])->name('answers.store');
-//Route::delete('questions/{question}/answers/{answer}', [AnswerController::class, 'destroy'])->name('answers.destroy');
-
 //----------------------------------------------------------
 
 Route::get('/users/toggle-admin/{id}', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
