@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StandingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,4 +60,21 @@ Route::get('/users/toggle-admin/{id}', [UserController::class, 'toggleAdmin'])->
 
 //---------------------------------------------------------
 Route::get('/home/quizzes', [QuizController::class, 'viewAllQuizzes'])->name('quizzes');
-Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz');
+
+
+
+
+//-----------------------------------------------------------------
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/home/profile', [UserController::class, 'viewProfile'])->name('profile');
+    Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz');
+    Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->name('quiz.submit');
+    Route::get('/quiz/submit-details/{quizId}/{correctAnswers}/{totalQuestions}', [UserController::class, 'viewQuizSubmitDetails'])->name('quiz-submit-details');
+    Route::get('/quiz/standing/{id}', [StandingController::class, 'viewQuizStanding'])->name('quiz-standing');
+    Route::get('/quiz/submit-thank', [UserController::class, 'viewQuizThank'])->name('quiz-results');
+});
+Route::get('/search-quizzes', [QuizController::class, 'searchQuizzes']);
+Route::get('/search', [SearchController::class, 'search'])->name('search');

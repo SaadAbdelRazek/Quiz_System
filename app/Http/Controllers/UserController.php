@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use App\Models\Result;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,5 +41,32 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'User role updated successfully.');
+    }
+
+    public function viewProfile()
+    {
+        $user = Auth::user();
+        $quizHistory=Result::with('quiz')->where('user_id',$user->id)->get();
+        $uniqueQuizCount = Result::where('user_id', $user->id)
+            ->distinct('quiz_id')
+            ->count('quiz_id');
+
+        $highestScore = Result::where('user_id', $user->id)
+            ->selectRaw('MAX(correct_answers / total_questions * 100) as max_score')
+            ->value('max_score');
+
+        $averageScore = Result::where('user_id', $user->id)
+            ->selectRaw('AVG(correct_answers / total_questions * 100) as average_score')
+            ->value('average_score');
+
+        return view('website.user-profile',compact('user','quizHistory','uniqueQuizCount','highestScore','averageScore'));
+    }
+
+    public function viewQuizSubmitDetails()
+    {
+        return view('website.quiz-submit-details');
+    }
+    public function viewQuizThank(){
+        return view('website.quiz-submit-thank');
     }
 }

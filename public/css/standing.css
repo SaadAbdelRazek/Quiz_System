@@ -1,0 +1,146 @@
+
+.standings-container {
+    width: 100%;
+    min-height: 100vh;
+
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+.standings-container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    transform: translateY(-5px);
+}
+
+/* Titles */
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2.2em;
+    margin-bottom: 20px;
+}
+
+.quiz-info h2 {
+    text-align: center;
+    color: #555;
+    font-size: 1.5em;
+}
+
+.quiz-info p {
+    text-align: center;
+    color: #777;
+    font-size: 1em;
+    margin-bottom: 25px;
+}
+
+/* Standings Table */
+.standings-table {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f8faff;
+    padding: 8px 0;
+}
+
+.table-header, .table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.table-header {
+    background: linear-gradient(135deg, #4a90e2, #357ABD);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.table-row {
+    border-bottom: 1px solid #e0e0e0;
+    color: #333;
+    font-size: 1em;
+    background-color: #ffffff;
+}
+
+.table-row:nth-child(even) {
+    background-color: #f2f7ff;
+}
+
+.table-row:hover {
+    background-color: #e8f0fe;
+}
+
+/* Rank, Name, Score */
+.rank, .name, .score {
+    flex: 1;
+    text-align: center;
+}
+
+.header-rank, .header-name, .header-score {
+    flex: 1;
+    text-align: center;
+}
+
+/* Rank Icon */
+.rank:before {
+    content: "\1F3C6"; /* Trophy Emoji */
+    display: inline-block;
+    font-size: 1.2em;
+    margin-right: 5px;
+    color: #f0c419;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .standings-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .quiz-info h2 {
+        font-size: 1.4em;
+    }
+
+    .quiz-info p {
+        font-size: 1em;
+    }
+
+    .table-header, .table-row {
+        padding: 10px 15px;
+    }
+
+    .rank, .name, .score, .header-rank, .header-name, .header-score {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.6em;
+    }
+
+    .quiz-info h2 {
+        font-size: 1.2em;
+    }
+
+    .quiz-info p {
+        font-size: 0.9em;
+    }
+
+    .table-header, .table-row {
+        padding: 8px 10px;
+    }
+
+    .rank, .name, .score, .header-rank, .header-name, .header-score {
+        font-size: 0.85em;
+    }
+}

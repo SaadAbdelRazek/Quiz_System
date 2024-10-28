@@ -11,66 +11,101 @@ html, body {
     display: flex;
     flex-direction: column;
 }
+.page-title {
+    color: #333;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
 .quiz-section {
-    padding: 40px 20px; /* Padding for the section */
-    height: 100%;
-    flex: 1;
+    padding: 50px 0;
 }
 
-/* Container for the Section */
 .container {
-    max-width: 1200px; /* Max width for the container */
-    margin: 0 auto; /* Centering the container */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* Grid for Quiz Cards */
 .quiz-grid {
-    display: grid; /* Using grid layout */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
-    gap: 20px; /* Space between cards */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
 }
 
-/* Styles for Quiz Cards */
 .quiz-card {
-    background-color: #fff; /* White background for cards */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-    padding: 20px; /* Padding inside cards */
-    transition: transform 0.3s, box-shadow 0.3s; /* Transition for hover effect */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
 }
 
-/* Hover Effect for Quiz Cards */
 .quiz-card:hover {
-    transform: translateY(-5px); /* Lift effect */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Title and Description in Quiz Cards */
+.quiz-icon {
+    font-size: 40px;
+    color: #4A90E2;
+    margin-bottom: 15px;
+}
+
 .quiz-card h3 {
-    font-size: 1.5rem; /* Title font size */
-    color: #4A90E2; /* Blue color for titles */
-    margin-bottom: 10px; /* Margin below the title */
+    font-size: 1.5em;
+    margin: 10px 0;
+    color: #333;
 }
 
 .quiz-card p {
-    color: #666; /* Gray text for description */
-    margin-bottom: 20px; /* Margin below description */
+    color: #666;
+    margin: 10px 0;
 }
 
-/* Button Styles */
-.quiz-card button {
-    background-color: #4A90E2; /* Button background color */
-    color: white; /* Text color */
-    padding: 10px 15px; /* Button padding */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer on hover */
-    transition: background-color 0.3s, transform 0.2s; /* Transition for hover effect */
+.quiz-description {
+    font-size: 0.9em;
+    color: #888;
+    margin: 15px 0;
 }
 
-/* Hover Effect for Buttons */
-.quiz-card button:hover {
-    background-color: #357ABD; /* Darker shade on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #4A90E2;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
 }
 
+.btn:hover {
+    background-color: #357ABD;
+}
+
+
+.search-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#quizSearch {
+    padding: 8px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.quiz-card {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    transition: box-shadow 0.3s ease;
+}
+
+.quiz-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

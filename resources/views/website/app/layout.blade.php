@@ -11,7 +11,7 @@
 <!-- Header -->
 <header>
     <div class="logo">
-        <h1>QuizQuest</h1>
+        <a href="{{route('home')}}"><h1>QuizQuest</h1></a>
     </div>
     <nav>
         <div class="menu-toggle" id="menuToggle">
@@ -30,7 +30,7 @@
                     <span>Welcome,</span>
                     <a href="#" id="userDropdown" class="username">{{$user_data->name}}</a>
                     <ul class="dropdown-menu" id="dropdownMenu">
-                        <li><a href="/dashboard">My Profile</a></li>
+                        <li><a href="{{route('profile')}}">My Profile</a></li>
                         <li>
                             <form id="logout-form" action="{{route('logout')}}" method="POST" style="display: none;">
                                 @csrf
