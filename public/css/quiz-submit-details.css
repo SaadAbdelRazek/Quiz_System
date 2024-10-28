@@ -1,0 +1,104 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d); /* Stylish gradient background */
+}
+
+/* Result Container */
+.result-container {
+    max-width: 500px;
+    width: 90%;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.result-container h1 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.score-section p {
+    color: #555;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+
+.performance p {
+    font-size: 1.2em;
+    margin: 8px 0;
+}
+
+#feedback-message {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #4A90E2;
+    margin: 20px 0;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.action-buttons button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-buttons button:first-child {
+    background-color: #4A90E2;
+    color: #fff;
+}
+
+.action-buttons button:last-child {
+    background-color: #ddd;
+    color: #333;
+}
+
+.action-buttons button:hover {
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .result-container {
+        padding: 20px;
+    }
+
+    .result-container h1 {
+        font-size: 1.8em;
+    }
+
+    .score-section p, .performance p, #feedback-message {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .result-container h1 {
+        font-size: 1.6em;
+    }
+
+    .action-buttons button {
+        font-size: 0.9em;
+    }
+}

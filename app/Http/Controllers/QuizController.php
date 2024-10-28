@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\Quizzer;
+use App\Models\Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +27,6 @@ class QuizController extends Controller
     {
         return view('quizzes.create');
     }
-
 
     public function createQuiz(Request $request)
 {
@@ -270,6 +270,7 @@ class QuizController extends Controller
         return redirect()->back()->with('error','some thing be wrong, please try again');
     }
 
+
     public function destroy($id)
     {
         $quiz = Quiz::findOrFail($id);
@@ -311,4 +312,54 @@ class QuizController extends Controller
         // Return the view and pass the quizzes to the Blade template
         return view('admin.admin-view-quizzes', compact('quizzes'));
     }
+
+    public function submitQuiz(Request $request, $quizId)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'answers' => 'required|array',
+        ]);
+
+        $correctAnswers = 0;
+        $totalQuestions = 0;
+
+        // Loop through the quiz questions
+        foreach ($request->answers as $questionId => $userAnswer) {
+            $question = Question::findOrFail($questionId);
+            $totalQuestions++;
+
+            // Check if the question type is true/false or multiple choice
+            if ($question->question_type === 'true_false') {
+                if ($userAnswer == $question->is_true) {
+                    $correctAnswers++;
+                }
+            } elseif ($question->question_type === 'multiple_choice' || $question->question_type === 'photo') {
+                $correctAnswer = $question->answers()->where('is_correct', 1)->first();
+                if ($correctAnswer && $userAnswer == $correctAnswer->id) {
+                    $correctAnswers++;
+                }
+            }
+            // Handle photo questions similarly if needed
+        }
+
+        // Store the user's results in the database
+        Result::create([
+            'user_id' => auth()->id(), // Assuming the user is authenticated
+            'quiz_id' => $quizId,
+            'correct_answers' => $correctAnswers,
+            'total_questions' => $totalQuestions,
+        ]);
+
+        return view('website.quiz-submit-details',compact('quizId','correctAnswers','totalQuestions'));
+    }
+
+    public function searchQuizzes(Request $request)
+    {
+        $query = $request->input('query');
+        $quizzes = Quiz::where('title', 'LIKE', "%{$query}%")
+            ->orWhere('subject', 'LIKE', "%{$query}%")
+            ->get();
+        return response()->json($quizzes);
+    }
+
 }

@@ -1,0 +1,73 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d); /* Stylish gradient background */
+}
+
+/* Thank You Container */
+.thank-you-container {
+    max-width: 400px;
+    width: 90%;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.thank-you-container h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.thank-you-container p {
+    color: #555;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.action-buttons button {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4A90E2; /* Button color */
+    color: #ffffff; /* Button text color */
+    transition: background-color 0.3s ease;
+}
+
+.action-buttons button:hover {
+    background-color: #357ABD; /* Darker shade on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .thank-you-container {
+        padding: 20px;
+    }
+
+    .thank-you-container h1 {
+        font-size: 2em;
+    }
+
+    .thank-you-container p {
+        font-size: 1em;
+    }
+}
