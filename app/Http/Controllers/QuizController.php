@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Models\Quizzer;
 use App\Models\Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\STR;
 
 class QuizController extends Controller
 {
@@ -30,22 +33,50 @@ class QuizController extends Controller
     $validatedData = $request->validate([
         'title' => 'required|string|max:255',
         'subject' => 'required|string|max:255',
+        'description' => 'nullable|string|max:500',
+        'duration' => 'nullable|integer|min:0',
+        'attempts' => 'nullable|integer|min:1',
+        'show_answers_after_submission' => 'boolean',
+        'visibility' => 'required|in:public,private',
+        'password' => 'nullable|string|min:8',
         'questions' => 'required|array',
         'questions.*.question_text' => 'required|string|max:255',
         'questions.*.question_type' => 'required|in:multiple_choice,true_false,photo',
         'questions.*.correct_answer' => 'required',
         'questions.*.answers' => 'required_if:questions.*.question_type,multiple_choice|required_if:questions.*.question_type,photo|array|min:2|max:4',
         'questions.*.answers.*.answer_text' => 'required|string|max:255',
-        'questions.*.photo' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // Validation for photo
+        'questions.*.photo' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
     ]);
 
+    // إنشاء رمز الوصول في حالة الكويز الخاص
+    $accessToken = $request->visibility === 'private' ? Str::random(12) : null;
+
+    // البحث عن Quizzer المرتبط بالمستخدم الحالي
+    $quizzer = Quizzer::where('user_id', auth()->user()->id)->first();
+
+
+
+    // تحقق من وجود سجل Quizzer للمستخدم الحالي
+    if (!$quizzer) {
+        return back()->withErrors(['error' => 'Quizzer not found for the user. Please ensure you have the correct permissions to create quizzes.']);
+    }
+
+    // بدء المعاملة
     DB::beginTransaction();
 
     try {
-        // Create the Quiz
+        // إنشاء سجل الكويز
         $quiz = Quiz::create([
+            'quizzer_id' => $quizzer->id,
             'title' => $validatedData['title'],
             'subject' => $validatedData['subject'],
+            'description' => $validatedData['description'],
+            'duration' => $validatedData['duration'],
+            'attempts' => $validatedData['attempts'],
+            'show_answers_after_submission' => $validatedData['show_answers_after_submission'],
+            'visibility' => $validatedData['visibility'],
+            'password' => $validatedData['password'],
+            'access_token' => $accessToken,
         ]);
 
         foreach ($validatedData['questions'] as $questionData) {
@@ -95,57 +126,148 @@ class QuizController extends Controller
 
     public function show($id)
     {
+
         $quiz = Quiz::with('questions.answers')->findOrFail($id);
+        if ($quiz->visibility === 'private') {
+            $request->validate(['password' => 'required']);
+
+            if (!Hash::check($request->password, $quiz->password)) {
+                return back()->withErrors(['password' => 'Incorrect password']);
+            }
+        }
         return view('quizzes.show', compact('quiz'));
     }
 
     public function edit($id)
     {
         $quiz = Quiz::with(['questions.answers'])->findOrFail($id);
+        $quiz_points = $quiz->questions->sum('points');
         if(!$quiz){
             return redirect()->back()->with('error', 'Quiz not found!');
         }
-        return view('admin.admin-update-quiz', compact('quiz'));
+        return view('admin.admin-update-quiz', compact('quiz','quiz_points'));
     }
 
     public function update(Request $request, $id)
-    {
-        // Find the quiz
-        $quiz = Quiz::findOrFail($id);
+{
+    // Find the quiz
+    $accessToken = $request->visibility === 'private' ? Str::random(12) : null;
+    $quiz = Quiz::findOrFail($id);
 
-        // Update quiz title and subject
-        $quiz->title = $request->input('title');
-        $quiz->subject = $request->input('subject');
-        $quiz->save();
+    // تحديث بيانات الكويز
+    $quiz->title = $request->input('title');
+    $quiz->subject = $request->input('subject');
+    $quiz->description = $request->input('description');
+    $quiz->duration = $request->input('duration');
+    $quiz->attempts = $request->input('attempts');
+    $quiz->show_answers_after_submission = $request->input('show_answers_after_submission');
+    $quiz->visibility = $request->input('visibility');
 
-        // Loop through the submitted questions
-        foreach ($request->input('questions') as $questionData) {
-            $question = Question::findOrFail($questionData['id']);
+    // تعيين كلمة المرور للكويز الخاص فقط
+    if ($request->input('visibility') == 'public') {
+        $quiz->password = null;
+    } else {
+        $validatedData = $request->validate([
+            'password'=> 'required|min:8',
+        ]);
+        $quiz->password = $validatedData['password'];
+    }
 
-            // Update question details
-            $question->question_text = $questionData['title'];
+    $quiz->access_token = $accessToken;
+    $quiz->save();
 
-            // For true/false questions, update the is_true column
-            if ($question->question_type === 'true_false') {
-                $question->is_true = $questionData['is_true'];
-            }
+    // التكرار على الأسئلة وتحديثها
+    foreach ($request->input('questions') as $index => $questionData) {
+        // البحث عن السؤال وتحديثه
+        $question = Question::findOrFail($questionData['id']);
 
-            $question->save();
+        // حساب نقاط الاختبار
+        $quiz_points = array_sum(array_column($request->input('questions'), 'points'));
 
-            // For multiple-choice questions, update answers
-            if ($question->question_type === 'multiple_choice' || $question->question_type ==='photo') {
+        // تحديث نص السؤال والنقاط
+        $question->question_text = $questionData['title'];
+        $question->points = $questionData['points'];
+
+        // إذا كان نوع السؤال هو true/false
+        if ($question->question_type === 'true_false') {
+            $question->is_true = $questionData['is_true'];
+        }
+
+        // حفظ السؤال
+        $question->save();
+
+        // تحديث الإجابات إذا كان السؤال من نوع multiple_choice أو photo
+        if ($question->question_type === 'multiple_choice' || $question->question_type === 'photo') {
+            // تحقق من وجود الإجابات
+            if (isset($questionData['answers']) && is_array($questionData['answers'])) {
+                // تحديث الإجابات
                 foreach ($questionData['answers'] as $answerData) {
-                    $answer = Answer::findOrFail($answerData['id']);
-                    $answer->answer_text = $answerData['text'];
-                    $answer->is_correct = ($questionData['correct_answer'] == $answer->id) ? 1 : 0;
-                    $answer->save();
+                    // تحقق من وجود الإجابة
+                    if (isset($answerData['id'])) {
+                        $answer = Answer::findOrFail($answerData['id']);
+                        $answer->answer_text = $answerData['text'];
+                        $answer->is_correct = ($questionData['correct_answer'] == $answer->id) ? 1 : 0;
+                        $answer->save();
+                    } else {
+                        // إذا كانت الإجابة جديدة (لا تحتوي على ID)، يمكنك إنشاء سجل جديد هنا
+                        $answer = new Answer();
+                        $answer->question_id = $question->id; // ربط الإجابة بالسؤال
+                        $answer->answer_text = $answerData['text'];
+                        $answer->is_correct = ($questionData['correct_answer'] == $answer->id) ? 1 : 0;
+                        $answer->save();
+                    }
                 }
 
+                // إذا كنت بحاجة لإزالة الإجابات التي لم تعد موجودة
+                $existingAnswerIds = array_column($question->answers->toArray(), 'id');
+                $newAnswerIds = array_column($questionData['answers'], 'id');
 
+                // حذف الإجابات التي لم تعد موجودة
+                foreach ($existingAnswerIds as $existingId) {
+                    if (!in_array($existingId, $newAnswerIds)) {
+                        $answer = Answer::find($existingId);
+                        if ($answer) {
+                            $answer->delete(); // حذف الإجابة
+                        }
+                    }
+                }
             }
         }
 
-        return redirect()->route('admin-view-quizzes')->with('status', 'Quiz updated successfully!');
+        // تحديث مسار الصورة إذا كان نوع السؤال هو photo
+        if ($question->question_type === 'photo' && $request->hasFile("questions.$index.image")) {
+            // حذف الصورة القديمة إذا كانت موجودة
+            if ($question->photo && Storage::disk('public')->exists($question->photo)) {
+                Storage::disk('public')->delete($question->photo);
+            }
+
+            // حفظ الصورة الجديدة وتحديث مسارها
+            $imagePath = $request->file("questions.$index.image")->store('images', 'public');
+            $question->photo = $imagePath;
+        }
+
+        $question->save();
+    }
+
+    return redirect()->route('admin-view-quizzes')->with('status', 'Quiz updated successfully!');
+}
+
+
+    public function update_activate($id){
+        $quiz_state = Quiz::findOrFail($id);
+        if($quiz_state->is_published==0){
+            $quiz_state->is_published = 1;
+
+        }
+        elseif($quiz_state->is_published==1){
+            $quiz_state->is_published = 0;
+
+        }
+        else{
+            return redirect()->back()->with('success','updated successfully');
+        }
+        $quiz_state->save();
+        return redirect()->back()->with('error','some thing be wrong, please try again');
     }
 
 
@@ -175,7 +297,17 @@ class QuizController extends Controller
     public function adminViewQuizzes()
     {
         // Fetch all quizzes from the database
-        $quizzes = Quiz::all();
+        if (auth()->user()->role === 'SuperAdmin') {
+            // Load all quizzes
+            $quizzes = Quiz::all();
+        }
+        elseif (auth()->user()->role === 'admin') {
+            // Load only quizzes created by the admin through quizzers table
+            $quizzes = Quiz::whereHas('quizzer', function ($query) {
+                $query->where('user_id', auth()->user()->id);
+            })->get();
+        }
+
 
         // Return the view and pass the quizzes to the Blade template
         return view('admin.admin-view-quizzes', compact('quizzes'));

@@ -159,7 +159,7 @@ table th {
     background-color: #fff; /* White background for the form */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    height: 505px;
+    /* height: 505px; */
 }
 
 h1 {
@@ -174,17 +174,20 @@ h1 {
 label {
     display: block; /* Block display for labels */
     margin-bottom: 5px; /* Space below the label */
-    font-weight: bold; /* Bold text for labels */
 }
 
 input[type="text"],
 input[type="number"],
-input[type="file"] {
+input[type="file"],
+input[type="password"],
+#quiz-description {
     width: 100%; /* Full width for input fields */
     padding: 10px; /* Padding inside input fields */
     border: 1px solid #ddd; /* Light border */
     border-radius: 4px; /* Rounded corners for inputs */
 }
+
+
 
 button {
     width: 100%; /* Full width for buttons */

@@ -59,8 +59,13 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+
     public function results()
     {
         return $this->hasMany(Result::class);
     }
+    public function quizzers()
+{
+    return $this->hasMany(Quizzer::class, 'user_id');
+}
 }

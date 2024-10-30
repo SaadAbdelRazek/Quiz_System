@@ -11,11 +11,11 @@
         <div class="content">
             <section class="stats">
                 <div class="stat-card">
-                    <h3>Total examinees</h3>
+                    <h3>Total Users</h3>
                     <p>1500</p>
                 </div>
                 <div class="stat-card">
-                    <h3>your Quizzes</h3>
+                    <h3>Total Quizzes</h3>
                     <p>120</p>
                 </div>
                 <div class="stat-card">

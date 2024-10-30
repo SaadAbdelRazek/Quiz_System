@@ -7,6 +7,9 @@
                 <h2>Welcome to QuizQuest</h2>
                 <p>Your adventure into the world of quizzes begins here.</p>
                 <a href="#quizzes" class="btn">Browse Quizzes</a>
+                @if(Auth::check())
+                    <a href="{{ route('start_create_quiz', ['user_id' => auth()->user()->id]) }}" class="btn">Create Quizzes</a>
+                @endif
             </div>
         </div>
     </section>

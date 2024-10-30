@@ -5,6 +5,7 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizzerController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StandingController;
 use App\Http\Controllers\UserController;
@@ -42,17 +43,11 @@ Route::middleware([
             Route::get('/admin-view-quizzes',[QuizController::class, 'adminViewQuizzes'])->name('admin-view-quizzes');
             Route::get('/admin-update-quiz/{id}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
             Route::put('/admin-update-quiz/{id}', [QuizController::class, 'update'])->name('quizzes.update');
+            Route::put('/admin-update-quiz-activate/{id}', [QuizController::class, 'update_activate'])->name('update-quiz-activate');
+
 });
 
-
-//Route::resource('quizzes', QuizController::class);
-//Route::get('quizzes/{quiz}/questions/create', [QuestionController::class, 'create'])->name('questions.create');
-//Route::post('quizzes/{quiz}/questions', [QuestionController::class, 'store'])->name('questions.store');
-//Route::delete('quizzes/{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
-//
-//Route::get('questions/{question}/answers/create', [AnswerController::class, 'create'])->name('answers.create');
-//Route::post('questions/{question}/answers', [AnswerController::class, 'store'])->name('answers.store');
-//Route::delete('questions/{question}/answers/{answer}', [AnswerController::class, 'destroy'])->name('answers.destroy');
+Route::get('start_create_quiz/{user_id}', [QuizzerController::class, 'index'])->name('start_create_quiz');
 
 //----------------------------------------------------------
 

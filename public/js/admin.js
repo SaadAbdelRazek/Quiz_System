@@ -11,6 +11,8 @@ document.getElementById("generate-questions").addEventListener("click", function
         questionDiv.className = "question-section";
         questionDiv.innerHTML = `
                 <h3>Choice Question ${i + 1}</h3>
+                <label>question point</label>
+                <input type="number" name="questions[${i}][points]" required>
                 <label>Question Title:</label>
                 <input type="text" name="questions[${i}][question_text]" required>
                 <input type="hidden" name="questions[${i}][question_type]" value="multiple_choice">
