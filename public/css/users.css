@@ -115,12 +115,27 @@ a {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transitions */
 }
 
+.a-table{
+    all:unset;
+    cursor: pointer;
+    color: rgb(15, 15, 213);
+    padding: 3px;
+    transition: .5s;
+
+}
+.a-table:hover{
+    background-color: unset;
+    color: rgb(27, 27, 201);
+
+
+}
+
 /* Hover and Focus Styles */
 a:hover{
     color: #fff; /* Change text color on hover */
     background-color: #4A90E2; /* Background color on hover */
     border-color: #357ABD; /* Border color on hover */
-    text-decoration: none;
+    text-decoration:underline;
 }
 
 /* Active Styles */

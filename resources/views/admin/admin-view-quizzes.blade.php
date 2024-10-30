@@ -50,10 +50,13 @@
                             @endif
                         </form>
 
+                        <a style="padding:10px; border:none; background-color: unset;width:fit-content;color:rgb(31, 93, 179)" href="{{route('admin-view-examinees',$quiz->id)}}" title="show examinees"><i class="fas fa-solid fa-users"></i></a>
+
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
+        <a class="a-table" href="{{route('admin-view-examinees')}}">show all of your examinees</a>
     </div>
 @endsection

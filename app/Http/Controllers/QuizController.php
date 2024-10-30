@@ -280,7 +280,7 @@ class QuizController extends Controller
 
     public function viewAllQuizzes()
     {
-        $quizzes = Quiz::all();
+        $quizzes = Quiz::all()->where('is_published',1);
         return view('website.quizzes', compact('quizzes'));
     }
 
@@ -322,11 +322,18 @@ class QuizController extends Controller
 
         $correctAnswers = 0;
         $totalQuestions = 0;
+        $points = 0;
 
         // Loop through the quiz questions
         foreach ($request->answers as $questionId => $userAnswer) {
-            $question = Question::findOrFail($questionId);
+            $question = Question::with('quiz')->findOrFail($questionId);
+            
+
+
+
+
             $totalQuestions++;
+            $points = $points + $question->points;
 
             // Check if the question type is true/false or multiple choice
             if ($question->question_type === 'true_false') {
@@ -346,11 +353,13 @@ class QuizController extends Controller
         Result::create([
             'user_id' => auth()->id(), // Assuming the user is authenticated
             'quiz_id' => $quizId,
+            'quizzer_id' => $question->quiz->quizzer_id,
             'correct_answers' => $correctAnswers,
             'total_questions' => $totalQuestions,
+            'points' => $points,
         ]);
 
-        return view('website.quiz-submit-details',compact('quizId','correctAnswers','totalQuestions'));
+        return view('website.quiz-submit-details',compact('quizId','correctAnswers','totalQuestions','points'));
     }
 
     public function searchQuizzes(Request $request)

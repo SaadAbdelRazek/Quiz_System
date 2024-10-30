@@ -63,4 +63,5 @@ class User extends Authenticatable
 {
     return $this->hasMany(Quizzer::class, 'user_id');
 }
+
 }
