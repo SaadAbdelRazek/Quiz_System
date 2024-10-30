@@ -286,12 +286,21 @@ class QuizController extends Controller
 
     public function viewQuiz($id)
     {
+        $result = Result::where('user_id', auth()->user()->id)->where('quiz_id', $id)->first();
         $quiz = Quiz::with(['questions.answers'])->findOrFail($id);
-        if(!$quiz){
-            return redirect()->back()->with('error', 'Quiz not found!');
+
+        if($result->attempts <= $quiz->attempts){
+
+            if(!$quiz){
+                return redirect()->back()->with('error', 'Quiz not found!');
+            }
+
+            return view('website.view-quiz', compact('quiz'));
         }
 
-        return view('website.view-quiz', compact('quiz'));
+        else{
+            return redirect()->back()->with('error','sorry, You have exceeded the allowed number of attempts for this quiz',compact('result','quiz'));
+        }
     }
 
     public function adminViewQuizzes()
@@ -327,7 +336,7 @@ class QuizController extends Controller
         // Loop through the quiz questions
         foreach ($request->answers as $questionId => $userAnswer) {
             $question = Question::with('quiz')->findOrFail($questionId);
-            
+
 
 
 
@@ -350,16 +359,37 @@ class QuizController extends Controller
         }
 
         // Store the user's results in the database
-        Result::create([
-            'user_id' => auth()->id(), // Assuming the user is authenticated
-            'quiz_id' => $quizId,
-            'quizzer_id' => $question->quiz->quizzer_id,
-            'correct_answers' => $correctAnswers,
-            'total_questions' => $totalQuestions,
-            'points' => $points,
-        ]);
 
-        return view('website.quiz-submit-details',compact('quizId','correctAnswers','totalQuestions','points'));
+        if(Result::where('user_id', auth()->user()->id)->where('quiz_id', $quizId)->first()->attempts <= Quiz::where('id',$quizId)->first()->attempts){
+            if (!Result::where('user_id', auth()->user()->id)->where('quiz_id', $quizId)->exists()) {
+                // إذا لم يكن هناك سجل للمستخدم لهذا الاختبار، يتم إنشاء سجل جديد
+                Result::create([
+                    'user_id' => auth()->id(),
+                    'quiz_id' => $quizId,
+                    'quizzer_id' => $question->quiz->quizzer_id,
+                    'correct_answers' => $correctAnswers,
+                    'total_questions' => $totalQuestions,
+                    'points' => $points,
+                    'attempts' => 1, // أول محاولة
+                ]);
+            } else {
+                // إذا كان هناك سجل، زيادة عدد المحاولات
+                $attempt = Result::where('user_id', auth()->user()->id)
+                            ->where('quiz_id', $quizId)
+                            ->first();
+                $attempt->attempts = ($attempt->attempts ?? 0) + 1;
+                $attempt->save(); // احفظ التغييرات في قاعدة البيانات
+            }
+            return view('website.quiz-submit-details',compact('quizId','correctAnswers','totalQuestions','points'));
+        }
+
+        else {
+            return redirect()->back()->with('error','sorry, You have exceeded the allowed number of attempts for this quiz');
+        }
+
+
+
+
     }
 
     public function searchQuizzes(Request $request)

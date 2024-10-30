@@ -17,6 +17,7 @@ class Result extends Model
         'correct_answers',
         'total_questions',
         'points',
+        'attempts',
     ];
 
     /**
@@ -33,6 +34,11 @@ class Result extends Model
     public function quiz()
     {
         return $this->belongsTo(Quiz::class);
+    }
+
+    public function quizzer()
+    {
+        return $this->belongsTo(Quizzer::class);
     }
 
 }
