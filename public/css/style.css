@@ -5,6 +5,33 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.error-message, .success-message{
+    position: fixed;
+    z-index: 101;
+    background-color: red;
+    color: white;
+    width: max-content;
+    padding: 10px 10px;
+    border-radius: 5px;
+    top: 100px;
+
+
+}
+
+.success-message{
+background-color: rgb(13, 151, 13);
+}
+
+.btn-close{
+    background-color: unset;
+    border:none;
+    color:white;
+    padding:5px;
+    cursor: pointer;
+    margin-left:20px;
+    font-size: 14px;
+}
+
 body {
     background-color: #f5f5f5;
     color: #333;

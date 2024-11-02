@@ -44,4 +44,9 @@ class ContactController extends Controller
 
 
     }
+
+    public function viewUserMessages(){
+        $contacts = Contact::all();
+        return view('admin.user-messages', compact('contacts'));
+    }
 }

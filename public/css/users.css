@@ -1,37 +1,4 @@
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* Table Styles */
-.users-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    overflow-x: auto;
-}
-
-.users-table th, .users-table td {
-    padding: 15px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-.users-table th {
-    background-color: #313335;
-    color: white;
-    font-size: 16px;
-}
 
 
 
@@ -46,18 +13,6 @@ h1 {
     transition: background-color 0.3s ease;
 }
 
-.admin-delete-btn {
-    padding: 10px 15px;
-    background-color: #b81616;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-.admin-delete-btn:hover{
-    background-color: #e16262;
-}
 .admin-btn:hover {
     background-color: #095f9f;
 }
@@ -146,9 +101,39 @@ a:active {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    a {
-        font-size: 16px; /* Larger font size on small screens */
-        padding: 12px 20px; /* More padding for easier touch targets */
+    .users-table thead {
+        display: none; /* Hide table header */
+    }
+
+    .users-table, .users-table tbody, .users-table tr, .users-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .users-table tr {
+        margin-bottom: 15px;
+    }
+
+    .users-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .users-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .admin-delete-btn {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
     }
 }
 

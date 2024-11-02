@@ -47,8 +47,7 @@ Route::middleware([
             Route::put('/admin-update-quiz-activate/{id}', [QuizController::class, 'update_activate'])->name('update-quiz-activate');
 
             Route::get('/admin-view-examinees/{id?}', [ExamineeController::class, 'index'])->name('admin-view-examinees');
-
-
+            Route::get('admin-view-contacts', [ContactController::class, 'viewUserMessages'])->name('admin-view-contacts');
 
 });
 

@@ -39,7 +39,11 @@
                     </li>
                 @endforeach
             </ul>
+            @if(!$quizHistory)
             <a href="#" id="viewAllToggle" class="word-link" >View All</a>
+            @else
+                <p>Quiz History Is Empty</p>
+            @endif
         </div>
     </div>
 </section>
