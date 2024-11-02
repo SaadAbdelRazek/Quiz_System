@@ -279,28 +279,48 @@ class QuizController extends Controller
     }
 
     public function viewAllQuizzes()
-    {
-        $quizzes = Quiz::all()->where('is_published',1);
-        return view('website.quizzes', compact('quizzes'));
+{
+    // التحقق مما إذا كان المستخدم مسجل دخول
+    $user = auth()->user();
+    $result = null;
+
+    // إذا كان هناك مستخدم مسجل دخول، جلب بيانات المحاولات له
+    if ($user) {
+        $result = Result::where('user_id', $user->id)->first();
     }
+
+    // استرجاع الكويزات المنشورة
+    $quizzes = Quiz::where('is_published', 1)->with('results')->get();
+
+    return view('website.quizzes', compact('quizzes', 'result'));
+}
+
+
 
     public function viewQuiz($id)
     {
         $result = Result::where('user_id', auth()->user()->id)->where('quiz_id', $id)->first();
         $quiz = Quiz::with(['questions.answers'])->findOrFail($id);
 
-        if($result->attempts <= $quiz->attempts){
+        if($result){
+            if($result->attempts < $quiz->attempts){
 
-            if(!$quiz){
-                return redirect()->back()->with('error', 'Quiz not found!');
+                if(!$quiz){
+                    return redirect()->back()->with('error', 'Quiz not found!');
+                }
+
+                return view('website.view-quiz', compact('quiz','result'));
             }
 
+            else{
+                return redirect()->back()->with('error','sorry, You have exceeded the allowed number of attempts for this quiz',compact('result','quiz'));
+            }
+        }
+        else{
             return view('website.view-quiz', compact('quiz'));
         }
 
-        else{
-            return redirect()->back()->with('error','sorry, You have exceeded the allowed number of attempts for this quiz',compact('result','quiz'));
-        }
+
     }
 
     public function adminViewQuizzes()
@@ -323,74 +343,74 @@ class QuizController extends Controller
     }
 
     public function submitQuiz(Request $request, $quizId)
-    {
-        // Validate the incoming request
-        $request->validate([
-            'answers' => 'required|array',
-        ]);
+{
+    // التحقق من جميع الأسئلة المطلوبة
+    $request->validate([
+        'answers' => 'required|array',
+        'answers.*' => 'required', // تحقق من أن كل سؤال تم الإجابة عليه
+    ], [
+        'answers.required' => 'Please answer all questions.', // الرسالة العامة
+        'answers.*.required' => 'Please answer each question.', // الرسالة لكل سؤال
+    ]);
 
-        $correctAnswers = 0;
-        $totalQuestions = 0;
-        $points = 0;
+    $correctAnswers = 0;
+    $totalQuestions = 0;
+    $points = 0;
 
-        // Loop through the quiz questions
-        foreach ($request->answers as $questionId => $userAnswer) {
-            $question = Question::with('quiz')->findOrFail($questionId);
+    // تكرار على الأسئلة
+    foreach ($request->answers as $questionId => $userAnswer) {
+        $question = Question::with('quiz')->findOrFail($questionId);
 
+        $totalQuestions++;
+        $points += $question->points;
 
-
-
-
-            $totalQuestions++;
-            $points = $points + $question->points;
-
-            // Check if the question type is true/false or multiple choice
-            if ($question->question_type === 'true_false') {
-                if ($userAnswer == $question->is_true) {
-                    $correctAnswers++;
-                }
-            } elseif ($question->question_type === 'multiple_choice' || $question->question_type === 'photo') {
-                $correctAnswer = $question->answers()->where('is_correct', 1)->first();
-                if ($correctAnswer && $userAnswer == $correctAnswer->id) {
-                    $correctAnswers++;
-                }
+        // تحقق من نوع السؤال
+        if ($question->question_type === 'true_false') {
+            if ($userAnswer == $question->is_true) {
+                $correctAnswers++;
             }
-            // Handle photo questions similarly if needed
+        } elseif ($question->question_type === 'multiple_choice' || $question->question_type === 'photo') {
+            $correctAnswer = $question->answers()->where('is_correct', 1)->first();
+            if ($correctAnswer && $userAnswer == $correctAnswer->id) {
+                $correctAnswers++;
+            }
         }
+    }
 
-        // Store the user's results in the database
-
-        if(Result::where('user_id', auth()->user()->id)->where('quiz_id', $quizId)->first()->attempts <= Quiz::where('id',$quizId)->first()->attempts){
-            if (!Result::where('user_id', auth()->user()->id)->where('quiz_id', $quizId)->exists()) {
-                // إذا لم يكن هناك سجل للمستخدم لهذا الاختبار، يتم إنشاء سجل جديد
-                Result::create([
-                    'user_id' => auth()->id(),
-                    'quiz_id' => $quizId,
-                    'quizzer_id' => $question->quiz->quizzer_id,
-                    'correct_answers' => $correctAnswers,
-                    'total_questions' => $totalQuestions,
-                    'points' => $points,
-                    'attempts' => 1, // أول محاولة
-                ]);
-            } else {
-                // إذا كان هناك سجل، زيادة عدد المحاولات
-                $attempt = Result::where('user_id', auth()->user()->id)
+    // استرجاع المحاولة للكويز
+    $quiz_attempt = Quiz::find($quizId);
+    $result_attempt = Result::where('user_id', auth()->user()->id)
                             ->where('quiz_id', $quizId)
                             ->first();
-                $attempt->attempts = ($attempt->attempts ?? 0) + 1;
-                $attempt->save(); // احفظ التغييرات في قاعدة البيانات
-            }
-            return view('website.quiz-submit-details',compact('quizId','correctAnswers','totalQuestions','points'));
+
+    if ($result_attempt) {
+        if ($result_attempt->attempts < $quiz_attempt->attempts) {
+            // زيادة عدد المحاولات إذا كانت أقل من الحد الأقصى
+            $result_attempt->attempts++;
+            $result_attempt->correct_answers = $correctAnswers;
+            $result_attempt->total_questions = $totalQuestions;
+            $result_attempt->points = $points;
+            $result_attempt->save();
+        } else {
+            // العودة مع رسالة خطأ إذا تجاوز عدد المحاولات
+            return redirect()->back()->with('error', 'Sorry, you have exceeded the allowed number of attempts for this quiz');
         }
-
-        else {
-            return redirect()->back()->with('error','sorry, You have exceeded the allowed number of attempts for this quiz');
-        }
-
-
-
-
+    } else {
+        // إذا كانت هذه أول محاولة، يتم إنشاء سجل جديد
+        Result::create([
+            'user_id' => auth()->id(),
+            'quiz_id' => $quizId,
+            'quizzer_id' => $question->quiz->quizzer_id,
+            'correct_answers' => $correctAnswers,
+            'total_questions' => $totalQuestions,
+            'points' => $points,
+            'attempts' => 1,
+        ]);
     }
+
+    return view('website.quiz-submit-details', compact('quizId', 'correctAnswers', 'totalQuestions', 'points', 'quiz_attempt', 'result_attempt'));
+}
+
 
     public function searchQuizzes(Request $request)
     {

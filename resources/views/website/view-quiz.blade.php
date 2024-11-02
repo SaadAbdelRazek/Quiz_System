@@ -7,51 +7,60 @@
 
         <form action="{{ route('quiz.submit', $quiz->id) }}" method="POST">
             @csrf
-            @foreach($quiz->questions as $index => $question)
-                @if($question->question_type == "multiple_choice")
+            @foreach ($quiz->questions as $index => $question)
+                @if ($question->question_type == 'multiple_choice')
                     <div class="question-section">
-                        <h2>{{$index + 1}}. {{$question->question_text}}</h2>
+                        <h2>{{ $index + 1 }}. {{ $question->question_text }}</h2>
                         <ul class="answers">
-                            @foreach($question->answers as $answer)
+                            @foreach ($question->answers as $answer)
                                 <li>
-                                    <input type="radio" name="answers[{{ $question->id }}]" id="answer{{ $answer->id }}" value="{{ $answer->id }}">
-                                    <label for="answer{{ $answer->id }}">{{$answer->answer_text}}</label>
+                                    <input type="radio" name="answers[{{ $question->id }}]" id="answer{{ $answer->id }}"
+                                        value="{{ $answer->id }}">
+                                    <label for="answer{{ $answer->id }}">{{ $answer->answer_text }}</label>
                                 </li>
                             @endforeach
+
+                            <!-- رسالة خطأ خاصة لكل سؤال -->
+                            @if ($errors->has("answers.{$question->id}"))
+                                <span class="text-danger">{{ $errors->first("answers.{$question->id}") }}</span>
+                            @endif
+
                         </ul>
                     </div>
-                @elseif($question->question_type == "true_false")
+                @elseif($question->question_type == 'true_false')
                     <div class="question-section">
-                        <h2>{{$index + 1}}. {{$question->question_text}}</h2>
+                        <h2>{{ $index + 1 }}. {{ $question->question_text }}</h2>
                         <ul class="answers">
                             <li>
-                                <input type="radio" name="answers[{{ $question->id }}]" value="1" id="true{{ $question->id }}">
+                                <input type="radio" name="answers[{{ $question->id }}]" value="1"
+                                    id="true{{ $question->id }}">
                                 <label for="true{{ $question->id }}">True</label>
                             </li>
                             <li>
-                                <input type="radio" name="answers[{{ $question->id }}]" value="0" id="false{{ $question->id }}">
+                                <input type="radio" name="answers[{{ $question->id }}]" value="0"
+                                    id="false{{ $question->id }}">
                                 <label for="false{{ $question->id }}">False</label>
                             </li>
                         </ul>
                     </div>
                 @else
                     <div class="question-section">
-                        <h2>{{$index + 1}}. {{$question->question_text}}</h2>
-                        <img src="{{ asset('storage/'.$question->photo) }}" alt="Question Image" class="quiz-photo">
+                        <h2>{{ $index + 1 }}. {{ $question->question_text }}</h2>
+                        <img src="{{ asset('storage/' . $question->photo) }}" alt="Question Image" class="quiz-photo">
                         <ul class="answers">
-                            @foreach($question->answers as $answer)
+                            @foreach ($question->answers as $answer)
                                 <li>
-                                    <input type="radio" name="answers[{{ $question->id }}]" id="photoAnswer{{ $answer->id }}" value="{{ $answer->id }}">
-                                    <label for="photoAnswer{{ $answer->id }}">{{$answer->answer_text}}</label>
+                                    <input type="radio" name="answers[{{ $question->id }}]"
+                                        id="photoAnswer{{ $answer->id }}" value="{{ $answer->id }}">
+                                    <label for="photoAnswer{{ $answer->id }}">{{ $answer->answer_text }}</label>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
                 @endif
             @endforeach
-                    
+
             <button type="submit" class="submit-btn">Submit Quiz</button>
         </form>
     </div>
-
 @endsection

@@ -9,22 +9,16 @@
 @endsection
 @section('content')
     @if (session('success'))
-        <div class="success-message alert alert-warning alert-dismissible fade show"
-            style=""
-            role="alert">
+        <div class="success-message alert alert-warning alert-dismissible fade show" style="" role="alert">
             {{ session('success') }}
-            <button type="button" class="btn-close" style=""
-                data-bs-dismiss="alert" aria-label="Close">X</button>
+            <button type="button" class="btn-close" style="" data-bs-dismiss="alert" aria-label="Close">X</button>
         </div>
     @endif
 
     @if (session('error'))
-        <div class="error-message alert alert-warning alert-dismissible fade show"
-            style=""
-            role="alert">
+        <div class="error-message alert alert-warning alert-dismissible fade show" style="" role="alert">
             {{ session('error') }}
-            <button type="button" class="btn-close" style=""
-                data-bs-dismiss="alert" aria-label="Close">X</button>
+            <button type="button" class="btn-close" style="" data-bs-dismiss="alert" aria-label="Close">X</button>
         </div>
     @endif
     <script>
@@ -53,10 +47,32 @@
                         <p>{{ $quiz->subject }}</p>
                         <p class="quiz-description"><span style="color:deepskyblue;">Quiz</span><span
                                 style="color: gray">Quest</span></p>
+                                @auth
 
-                        <a href="{{ route('view-quiz', $quiz->id) }}" class="btn">Take Quiz</a>
+                            @php
+                                $viewed = false; // متغير للتحقق إذا كان الزر قد تم عرضه بالفعل
+                            @endphp
+
+                            @foreach ($quiz->results as $result)
+                            @if ($result->quiz->attempts < $quiz->attempts || !$result->quiz_id)
+                            <a href="{{ route('view-quiz', $quiz->id) }}" class="btn">Take Quiz</a>
+                            @endif
+                                @if ($result->attempts >= 1 && !$viewed)
+                                <a href="{{ route('view_quiz_result', $quiz->id) }}" style="background-color: green" class="btn">view result</a>
+
+                                    @php
+                                        $viewed = true; // تعيين المتغير لمنع عرض الزر مجددًا
+                                    @endphp
+                                @endif
+                            @endforeach
+
+                        @endauth
+
+
                         <a href="{{ route('quiz-standing', $quiz->id) }}" class="btn"
                             style="background-color: #636262">Standing</a>
+
+
                     </div>
                 @endforeach
             </div>
