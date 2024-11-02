@@ -208,9 +208,11 @@ nav ul li a:hover {
 }
 
 .quiz-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
+    display: flex;
+    /* grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); */
     gap: 20px; /* Spacing between cards */
+    justify-content:center;
+
 }
 
 .quiz-card {
@@ -219,6 +221,14 @@ nav ul li a:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     padding: 20px;
     transition: transform 0.3s, box-shadow 0.3s; /* Transition for hover effects */
+    width: 20%;
+    max-width: 24%;
+    transition: .5s;
+}
+
+.quiz-card:hover{
+    scale: 1.05;
+    transform: translateY(-5px);
 }
 
 .quiz-card h3 {

@@ -13,8 +13,10 @@ class Result extends Model
     protected $fillable = [
         'user_id',
         'quiz_id',
+        'quizzer_id',
         'correct_answers',
         'total_questions',
+        'points',
     ];
 
     /**

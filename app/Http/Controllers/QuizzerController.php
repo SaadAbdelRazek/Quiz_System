@@ -22,7 +22,10 @@ class QuizzerController extends Controller
 
         // تغيير دور المستخدم إلى 'admin'
         $user = User::findOrFail($userId);
-        $user->role = 'admin';
+        if(!$user->role == 'SuperAdmin'){
+
+            $user->role = 'admin';
+        }
         $user->save();
     }
 

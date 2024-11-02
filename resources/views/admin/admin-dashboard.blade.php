@@ -4,7 +4,7 @@
         <header class="header">
             <h1>Dashboard</h1>
             <div class="user-info">
-                <span>Welcome, Admin</span>
+                <span>Welcome, {{$user_data->name}}</span>
                 <img src="https://via.placeholder.com/40" alt="User Avatar" class="avatar">
             </div>
         </header>
@@ -12,15 +12,15 @@
             <section class="stats">
                 <div class="stat-card">
                     <h3>Total examinees</h3>
-                    <p>1500</p>
+                    <p>{{$userExaminees}}</p>
                 </div>
                 <div class="stat-card">
                     <h3>your Quizzes</h3>
-                    <p>120</p>
+                    <p>{{$userQuizzes}}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Active Quizzes</h3>
-                    <p>75</p>
+                    <p>{{$userActiveQuizzes}}</p>
                 </div>
             </section>
             <section class="table">

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function index(){
-        $quizzes=Quiz::limit(4)->get();
+        $quizzes=Quiz::where('is_published',1)->limit(4)->get();
         return view('website.index',compact('quizzes'));
     }
 
