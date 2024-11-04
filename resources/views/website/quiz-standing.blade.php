@@ -7,26 +7,28 @@
     <div class="standings-container">
         <h1>Quiz Standings</h1>
         <div class="quiz-info">
-            <h2>Quiz Title</h2>
-            <p>Description of the quiz and current standings</p>
+            <h2>{{$quiz->title}}</h2>
+            <p>{{$quiz->subject}}</p>
         </div>
         <div class="standings-table">
+            @if($rowsCount)
             <div class="table-header">
                 <div class="header-rank">Rank</div>
                 <div class="header-name">Name</div>
                 <div class="header-score">Score</div>
             </div>
+            @foreach($results as $result)
             <div class="table-row">
-                <div class="rank">1</div>
-                <div class="name">Alice</div>
-                <div class="score">95</div>
+                <div class="rank">{{$loop->iteration}}</div>
+                <div class="name">{{$result->user->name}}</div>
+                <div class="score">{{$result->points}}</div>
             </div>
-            <div class="table-row">
-                <div class="rank">2</div>
-                <div class="name">Bob</div>
-                <div class="score">90</div>
-            </div>
-            <!-- Add more rows as needed -->
+            @endforeach
+            @else
+                <div class="table-header">
+                <div class="header-rank">There is no quiz submits yet</div>
+                </div>
+            @endif
         </div>
     </div>
 

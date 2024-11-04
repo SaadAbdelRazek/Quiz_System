@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Quiz;
 use App\Models\Result;
 use App\Models\User;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,10 @@ class UserController extends Controller
         }
 
         $user->delete();
+        UserActivity::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Delete Account',
+        ]);
 
         return redirect()->back()->with('success', 'User deleted successfully.');
     }
@@ -38,6 +43,10 @@ class UserController extends Controller
 
         // Toggle admin status
         $user->role = $user->role === 'admin' ? 'user' : 'admin';
+        UserActivity::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Someone role changed',
+        ]);
         $user->save();
 
         return redirect()->back()->with('success', 'User role updated successfully.');

@@ -59,8 +59,11 @@
                     </div>
                 @endif
             @endforeach
-
-            <button type="submit" class="submit-btn">Submit Quiz</button>
+            @if(!$quiz->quizzer_id==auth()->id())
+                <button type="submit" class="submit-btn">Submit Quiz</button>
+            @else
+                <button class="submit-btn" disabled>Submit Quiz</button>
+            @endif
         </form>
     </div>
 @endsection

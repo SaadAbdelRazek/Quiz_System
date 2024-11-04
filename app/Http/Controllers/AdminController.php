@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Quiz;
 use App\Models\Result;
 use App\Models\User;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +24,8 @@ class AdminController extends Controller
             $users=User::all()->count();
             $quizzes=Quiz::all()->count();
             $activeQuizzes=Quiz::where('is_published',1)->count();
-            return view('admin.super-admin-dashboard', compact('examinees','users','quizzes','activeQuizzes'));
+            $activities = UserActivity::with('user')->orderBy('created_at', 'desc')->get();
+            return view('admin.super-admin-dashboard', compact('examinees','users','quizzes','activeQuizzes','activities'));
         }
     }
     public function viewUsers()

@@ -1,11 +1,18 @@
 @extends('admin.app.layout')
+@section('custom-css')
+    <link rel="stylesheet" href="{{asset('css/profile-photo.css')}}">
+@endsection
 @section('content')
     <div class="main-content">
         <header class="header">
             <h1>Dashboard</h1>
             <div class="user-info">
                 <span>Welcome, {{$user_data->name}}</span>
-                <img src="https://via.placeholder.com/40" alt="User Avatar" class="avatar">
+                @if($user_data->profile_photo_path)
+                    <img src="{{asset('storage/'. $user_data->profile_photo_path)}}" alt="{{ $user_data->name }}"  class="profile-picture">
+                @else
+                    <img src="{{asset('images/def.jpg')}}" alt="{{ $user_data->name }}" class="profile-picture">
+                @endif
             </div>
         </header>
         <div class="content">
@@ -38,21 +45,13 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @foreach($activities as $activity)
                     <tr>
-                        <td>John Doe</td>
-                        <td>Created Quiz</td>
-                        <td>2024-10-20</td>
+                        <td>{{$activity->user->name}}</td>
+                        <td>{{$activity->activity}}</td>
+                        <td>{{$activity->created_at->format('Y-m-d')}}</td>
                     </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>Updated Profile</td>
-                        <td>2024-10-19</td>
-                    </tr>
-                    <tr>
-                        <td>Tom Brown</td>
-                        <td>Deleted Quiz</td>
-                        <td>2024-10-18</td>
-                    </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </section>

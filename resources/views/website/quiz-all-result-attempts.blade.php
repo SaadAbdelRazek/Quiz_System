@@ -14,7 +14,7 @@
         <div class="performance">
             <p><strong>Total Questions:</strong> <span id="total-questions">{{$result->total_questions}}</span></p>
             <p><strong>Correct Answers:</strong> <span id="correct-answers">{{$result->correct_answers}}</span></p>
-            <p><strong>Your Score:</strong> <span id="score">{{$result->points}}/{{}}</span></p>
+            <p><strong>Your Score:</strong> <span id="score">{{round(($result->correct_answers/$result->points)*100,2)}}%</span></p>
         </div>
         <p id="feedback-message">Great job! Keep up the good work!</p>
         <div class="action-buttons">

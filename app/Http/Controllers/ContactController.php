@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,10 @@ class ContactController extends Controller
 
             // Create a new contact entry in the database
             Contact::create($contactData);
+            UserActivity::create([
+                'user_id' => auth()->id(),
+                'activity' => 'Send Contact Message',
+            ]);
             // Redirect back with a success message
             return redirect()->back()->with('status', 'Your message has been sent successfully!');
         }

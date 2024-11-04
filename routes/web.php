@@ -67,7 +67,7 @@ Route::get('/home/quizzes', [QuizController::class, 'viewAllQuizzes'])->name('qu
 
 Route::middleware('auth')->group(function () {
     Route::get('/home/profile', [UserController::class, 'viewProfile'])->name('profile');
-    Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz');
+    Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz')->middleware('check.quiz.attempts');
     Route::get('/quiz/submit-details/{quizId}/{correctAnswers}/{totalQuestions}', [UserController::class, 'viewQuizSubmitDetails'])->name('quiz-submit-details');
     Route::get('/quiz/standing/{id}', [StandingController::class, 'viewQuizStanding'])->name('quiz-standing');
     Route::get('/quiz/submit-thank', [UserController::class, 'viewQuizThank'])->name('quiz-results');
@@ -76,7 +76,9 @@ Route::middleware('auth')->group(function () {
 
 });
 
-    Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->name('quiz.submit');
-    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/search-quizzes', [QuizController::class, 'searchQuizzes']);
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('handleRouteErrors')->name('contact.store');
+Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->middleware('handleRouteErrors')->name('quiz.submit');
+
+

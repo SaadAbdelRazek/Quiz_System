@@ -7,6 +7,7 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\Quizzer;
 use App\Models\Result;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -114,6 +115,10 @@ class QuizController extends Controller
         }
 
         DB::commit();
+        UserActivity::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Create Quiz',
+        ]);
 
         return redirect()->back()->with('success', 'Quiz created successfully!');
     } catch (\Exception $e) {
@@ -248,6 +253,10 @@ class QuizController extends Controller
 
         $question->save();
     }
+    UserActivity::create([
+        'user_id' => auth()->id(),
+        'activity' => 'Update Quiz',
+    ]);
 
     return redirect()->route('admin-view-quizzes')->with('status', 'Quiz updated successfully!');
 }

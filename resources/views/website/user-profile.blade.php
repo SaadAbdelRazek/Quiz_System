@@ -5,7 +5,11 @@
 <section class="profile-section">
     <div class="container">
         <div class="profile-header">
-            <img src="{{asset('storage/'. $user_data->profile_photo_path)}}" alt="{{ $user_data->name }}" alt="Profile Picture" class="profile-picture">
+            @if($user_data->profile_photo_path)
+            <img src="{{asset('storage/'. $user_data->profile_photo_path)}}" alt="{{ $user_data->name }}"  class="profile-picture">
+            @else
+                <img src="{{asset('images/def.jpg')}}" alt="{{ $user_data->name }}" class="profile-picture">
+            @endif
             <div class="user-info">
                 <h1>{{$user->name}}</h1>
                 <p>Email: {{$user->email}}</p>
@@ -31,15 +35,17 @@
         <div class="quiz-activity">
             <h2>Recent Quiz Activity</h2>
             <ul class="quiz-list" id="quizList">
+                @php $checkHistory=0; @endphp
                 @foreach($quizHistory as $index => $quiz)
                     <li class="quiz-item" style="display: {{ $index < 3 ? 'block' : 'none' }};">
                         <h3>{{$quiz->quiz->title}}</h3>
                         <p>Score: {{ round((($quiz->correct_answers / $quiz->total_questions)*100), 2) }}%</p>
                         <span>Completed on: {{$quiz->created_at->format('Y-m-d')}}</span>
                     </li>
+                    @php $checkHistory++; @endphp
                 @endforeach
             </ul>
-            @if(!$quizHistory)
+            @if($checkHistory)
             <a href="#" id="viewAllToggle" class="word-link" >View All</a>
             @else
                 <p>Quiz History Is Empty</p>

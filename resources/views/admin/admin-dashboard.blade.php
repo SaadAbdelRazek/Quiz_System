@@ -1,11 +1,18 @@
 @extends('admin.app.layout')
+@section('custom-css')
+    <link rel="stylesheet" href="{{asset('css/profile-photo.css')}}">
+@endsection
 @section('content')
     <div class="main-content">
         <header class="header">
             <h1>Dashboard</h1>
             <div class="user-info">
                 <span>Welcome, {{$user_data->name}}</span>
-                <img src="https://via.placeholder.com/40" alt="User Avatar" class="avatar">
+                @if($user_data->profile_photo_path)
+                    <img src="{{asset('storage/'. $user_data->profile_photo_path)}}" alt="{{ $user_data->name }}"  class="profile-picture">
+                @else
+                    <img src="{{asset('images/def.jpg')}}" alt="{{ $user_data->name }}" class="profile-picture">
+                @endif
             </div>
         </header>
         <div class="content">
@@ -22,35 +29,6 @@
                     <h3>Active Quizzes</h3>
                     <p>{{$userActiveQuizzes}}</p>
                 </div>
-            </section>
-            <section class="table">
-                <h2>Recent Activities</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Action</th>
-                        <th>Date</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>Created Quiz</td>
-                        <td>2024-10-20</td>
-                    </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>Updated Profile</td>
-                        <td>2024-10-19</td>
-                    </tr>
-                    <tr>
-                        <td>Tom Brown</td>
-                        <td>Deleted Quiz</td>
-                        <td>2024-10-18</td>
-                    </tr>
-                    </tbody>
-                </table>
             </section>
         </div>
     </div>
