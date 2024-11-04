@@ -79,5 +79,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz/view-quiz-result/{id}', [UserController::class, 'view_quiz_result_attempts'])->name('view_quiz_result');
 
 });
+
+Route::get('quiz/check-password/{access}', [QuizController::class, 'submit_password_private_quiz'])->name('quiz_password'); // enter the quiz password
+Route::post('quiz/private/{id}', [QuizController::class, 'view_private_quiz'])->name('private_quiz');
+
 Route::get('/search-quizzes', [QuizController::class, 'searchQuizzes']);
 Route::get('/search', [SearchController::class, 'search'])->name('search');

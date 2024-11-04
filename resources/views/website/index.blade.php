@@ -16,6 +16,12 @@
         </div>
     </section>
 
+    <style>
+        .btn-quiz{
+            padding: 5px;
+        }
+    </style>
+
     <!-- About Us Section -->
     <section id="about" class="about-section">
         <div class="container">
@@ -46,12 +52,44 @@
         <div class="container">
             <h2>Featured Quizzes</h2>
             <div class="quiz-grid">
-                @foreach($quizzes as $quiz)
-                <div class="quiz-card">
-                    <h3>{{$quiz->title}} Quiz</h3>
-                    <p>{{$quiz->subject}}</p>
-                    <button onclick="window.location.href='{{ route('view-quiz',$quiz->id)}}'">Take Quiz</button>
-                </div>
+                @foreach ($quizzes as $index => $quiz)
+                    <div class="quiz-card" style="display: {{ $index < 6 ? 'block' : 'none' }}"
+                        data-title="{{ strtolower($quiz->title) }}">
+                        <div class="quiz-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>{{ $quiz->title }}</h3>
+                        <p>{{ $quiz->subject }}</p>
+                        <p class="quiz-description">
+                            <span style="color:deepskyblue;">Quiz</span><span style="color: gray">Quest</span>
+                        </p>
+
+                        @php
+                            // الحصول على نتيجة الكويز الحالي للمستخدم الحالي (مثلاً باستخدام user_id)
+                            $quizResult = $quiz->results->where('user_id', auth()->id())->first();
+                        @endphp
+
+                        {{-- عرض الأزرار بناءً على حالة المحاولات لكل كويز --}}
+                        @if ($quizResult)
+                            {{-- زر "Take Quiz" يظهر إذا كانت المحاولات أقل من الحد المسموح --}}
+                            @if ($quizResult->attempts < $quiz->attempts)
+                                <a href="{{ route('view-quiz', $quiz->id) }}" class="btn btn-quiz">Take Quiz</a>
+                            @endif
+
+                            {{-- زر "View Result" يظهر إذا كان هناك محاولات سابقة --}}
+                            @if ($quizResult->attempts >= 1)
+                                <a href="{{ route('view_quiz_result', $quiz->id) }}" style="background-color: green"
+                                    class="btn">View Result</a>
+                            @endif
+                        @else
+                            {{-- زر "Take Quiz" يظهر إذا لم تكن هناك محاولات سابقة --}}
+                            <a href="{{ route('view-quiz', $quiz->id) }}" class="btn btn-quiz">Take Quiz</a>
+                        @endif
+
+                        {{-- زر "Standing" --}}
+                        <a href="{{ route('quiz-standing', $quiz->id) }}" class="btn btn-quiz"
+                            style="background-color: #636262">Standing</a>
+                    </div>
                 @endforeach
             </div>
             <a href="{{route('quizzes')}}" id="loadMoreBtn" class="btn">Load More Quizzes</a>

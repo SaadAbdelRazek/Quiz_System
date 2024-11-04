@@ -45,36 +45,39 @@
                         </div>
                         <h3>{{ $quiz->title }}</h3>
                         <p>{{ $quiz->subject }}</p>
-                        <p class="quiz-description"><span style="color:deepskyblue;">Quiz</span><span
-                                style="color: gray">Quest</span></p>
-                                @auth
+                        <p class="quiz-description">
+                            <span style="color:deepskyblue;">Quiz</span><span style="color: gray">Quest</span>
+                        </p>
 
-                            @php
-                                $viewed = false; // متغير للتحقق إذا كان الزر قد تم عرضه بالفعل
-                            @endphp
+                        @php
+                            // الحصول على نتيجة الكويز الحالي للمستخدم الحالي (مثلاً باستخدام user_id)
+                            $quizResult = $quiz->results->where('user_id', auth()->id())->first();
+                        @endphp
 
-                            @foreach ($quiz->results as $result)
-                            @if ($result->quiz->attempts < $quiz->attempts || !$result->quiz_id)
-                            <a href="{{ route('view-quiz', $quiz->id) }}" class="btn">Take Quiz</a>
+                        {{-- عرض الأزرار بناءً على حالة المحاولات لكل كويز --}}
+                        @if ($quizResult)
+                            {{-- زر "Take Quiz" يظهر إذا كانت المحاولات أقل من الحد المسموح --}}
+                            @if ($quizResult->attempts < $quiz->attempts)
+                                <a href="{{ route('view-quiz', $quiz->id) }}" class="btn">Take Quiz</a>
                             @endif
-                                @if ($result->attempts >= 1 && !$viewed)
-                                <a href="{{ route('view_quiz_result', $quiz->id) }}" style="background-color: green" class="btn">view result</a>
 
-                                    @php
-                                        $viewed = true; // تعيين المتغير لمنع عرض الزر مجددًا
-                                    @endphp
-                                @endif
-                            @endforeach
+                            {{-- زر "View Result" يظهر إذا كان هناك محاولات سابقة --}}
+                            @if ($quizResult->attempts >= 1)
+                                <a href="{{ route('view_quiz_result', $quiz->id) }}" style="background-color: green"
+                                    class="btn">View Result</a>
+                            @endif
+                        @else
+                            {{-- زر "Take Quiz" يظهر إذا لم تكن هناك محاولات سابقة --}}
+                            <a href="{{ route('view-quiz', $quiz->id) }}" class="btn">Take Quiz</a>
+                        @endif
 
-                        @endauth
-
-
+                        {{-- زر "Standing" --}}
                         <a href="{{ route('quiz-standing', $quiz->id) }}" class="btn"
                             style="background-color: #636262">Standing</a>
-
-
                     </div>
                 @endforeach
+
+
             </div>
             <br>
             @if ($index >= 6)

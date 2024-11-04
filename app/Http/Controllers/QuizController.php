@@ -362,20 +362,22 @@ class QuizController extends Controller
         $question = Question::with('quiz')->findOrFail($questionId);
 
         $totalQuestions++;
-        $points += $question->points;
 
         // تحقق من نوع السؤال
         if ($question->question_type === 'true_false') {
             if ($userAnswer == $question->is_true) {
                 $correctAnswers++;
+                $points += $question->points; // أضف النقاط هنا فقط إذا كانت الإجابة صحيحة
             }
         } elseif ($question->question_type === 'multiple_choice' || $question->question_type === 'photo') {
             $correctAnswer = $question->answers()->where('is_correct', 1)->first();
             if ($correctAnswer && $userAnswer == $correctAnswer->id) {
                 $correctAnswers++;
+                $points += $question->points; // أضف النقاط هنا فقط إذا كانت الإجابة صحيحة
             }
         }
     }
+
 
     // استرجاع المحاولة للكويز
     $quiz_attempt = Quiz::find($quizId);
@@ -407,8 +409,12 @@ class QuizController extends Controller
             'attempts' => 1,
         ]);
     }
-
-    return view('website.quiz-submit-details', compact('quizId', 'correctAnswers', 'totalQuestions', 'points', 'quiz_attempt', 'result_attempt'));
+    if($quiz_attempt->show_answers_after_submission == 1){
+        return view('website.quiz-submit-details', compact('quizId', 'correctAnswers', 'totalQuestions', 'points', 'quiz_attempt', 'result_attempt'));
+    }
+    else{
+        return view('website.quiz-submit-thank', compact('quizId', 'correctAnswers', 'totalQuestions', 'points', 'quiz_attempt', 'result_attempt'));
+    }
 }
 
 
@@ -420,5 +426,57 @@ class QuizController extends Controller
             ->get();
         return response()->json($quizzes);
     }
+
+
+    public function submit_password_private_quiz($access){
+        $quiz = Quiz::with(['questions.answers'])->where('access_token',$access)->first();
+        if($quiz){
+
+            return view('website.password-private-quiz',compact('quiz'));
+        }
+        else{
+            return redirect()->back()->with('error','quiz not found');
+        }
+    }
+
+    public function view_private_quiz(Request $request ,$id){
+
+        $quiz = Quiz::with(['questions.answers'])->findOrFail($id);
+        $request->validate([
+            'password' => 'required'
+        ]);
+
+        if($request->password == $quiz->password){
+
+
+
+        $result = Result::where('user_id', auth()->user()->id)->where('quiz_id', $quiz->id)->first();
+
+
+
+        if($result){
+            if($result->attempts < $quiz->attempts){
+
+                if(!$quiz){
+                    return redirect()->back()->with('error', 'Quiz not found!');
+                }
+
+                return view('website.view-private-quiz', compact('quiz','result'));
+            }
+
+            else{
+                return redirect()->back()->with('error','sorry, You have exceeded the allowed number of attempts for this quiz',compact('result','quiz'));
+            }
+        }
+        else{
+            return view('website.view-private-quiz', compact('quiz'));
+        }
+    }
+
+    else{
+        return redirect()->back()->with('error','password incorrect');
+    }
+}
+
 
 }
