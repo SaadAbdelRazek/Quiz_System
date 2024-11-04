@@ -1,14 +1,5 @@
 @extends('website.app.layout')
-@section('custom-css')
-    <link rel="stylesheet" href="{{asset('css/index-quiz.css')}}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-          integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMg6B4XrA9RjZbgc1b4E5V1P3Xr8U32ZgwtFfS" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-@endsection
 @section('content')
-
     <!-- Home Section -->
     <section id="home" class="home-section">
         <div class="cover-overlay">
@@ -18,12 +9,18 @@
                 <a href="#quizzes" class="btn">Browse Quizzes</a>
                 @if (auth()->user())
 
-                <a href="{{ route('start_create_quiz', ['user_id' => auth()->user()->id]) }}" class="btn">Create Quizzes</a>
+                    <a href="{{ route('start_create_quiz', ['user_id' => auth()->user()->id]) }}" class="btn">Create Quizzes</a>
                 @endif
 
             </div>
         </div>
     </section>
+
+    <style>
+        .btn-quiz{
+            padding: 5px;
+        }
+    </style>
 
     <!-- About Us Section -->
     <section id="about" class="about-section">
@@ -63,34 +60,35 @@
                         </div>
                         <h3>{{ $quiz->title }}</h3>
                         <p>{{ $quiz->subject }}</p>
-                        <p class="quiz-description"><span style="color:deepskyblue;">Quiz</span><span
-                                style="color: gray">Quest</span></p>
-                        @auth
+                        <p class="quiz-description">
+                            <span style="color:deepskyblue;">Quiz</span><span style="color: gray">Quest</span>
+                        </p>
 
-                            @php
-                                $viewed = false; // متغير للتحقق إذا كان الزر قد تم عرضه بالفعل
-                            @endphp
+                        @php
+                            // الحصول على نتيجة الكويز الحالي للمستخدم الحالي (مثلاً باستخدام user_id)
+                            $quizResult = $quiz->results->where('user_id', auth()->id())->first();
+                        @endphp
 
-                            @foreach ($quiz->results as $result)
-                                @if ($result->quiz->attempts < $quiz->attempts || !$result->quiz_id)
-                                    <a href="{{ route('view-quiz', $quiz->id) }}" class="btn">Take Quiz</a>
-                                @endif
-                                @if ($result->attempts >= 1 && !$viewed)
-                                    <a href="{{ route('view_quiz_result', $quiz->id) }}" style="background-color: green" class="btn">view result</a>
+                        {{-- عرض الأزرار بناءً على حالة المحاولات لكل كويز --}}
+                        @if ($quizResult)
+                            {{-- زر "Take Quiz" يظهر إذا كانت المحاولات أقل من الحد المسموح --}}
+                            @if ($quizResult->attempts < $quiz->attempts)
+                                <a href="{{ route('view-quiz', $quiz->id) }}" class="btn btn-quiz">Take Quiz</a>
+                            @endif
 
-                                    @php
-                                        $viewed = true; // تعيين المتغير لمنع عرض الزر مجددًا
-                                    @endphp
-                                @endif
-                            @endforeach
+                            {{-- زر "View Result" يظهر إذا كان هناك محاولات سابقة --}}
+                            @if ($quizResult->attempts >= 1)
+                                <a href="{{ route('view_quiz_result', $quiz->id) }}" style="background-color: green"
+                                   class="btn btn-quiz">View Result</a>
+                            @endif
+                        @else
+                            {{-- زر "Take Quiz" يظهر إذا لم تكن هناك محاولات سابقة --}}
+                            <a href="{{ route('view-quiz', $quiz->id) }}" class="btn btn-quiz">Take Quiz</a>
+                        @endif
 
-                        @endauth
-
-
-                        <a href="{{ route('quiz-standing', $quiz->id) }}" class="btn"
+                        {{-- زر "Standing" --}}
+                        <a href="{{ route('quiz-standing', $quiz->id) }}" class="btn btn-quiz"
                            style="background-color: #636262">Standing</a>
-
-
                     </div>
                 @endforeach
             </div>
@@ -105,14 +103,14 @@
             <form id="contact-form" action="{{route('contact.store')}}" method="POST">
                 @csrf
                 @if(!Auth::check())
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
                 @endif
                 <div class="form-group">
                     <label for="message">Message</label>

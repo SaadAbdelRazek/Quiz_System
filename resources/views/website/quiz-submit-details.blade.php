@@ -18,7 +18,9 @@
         </div>
         <p id="feedback-message">Great job! Keep up the good work!</p>
         <div class="action-buttons">
-            <button onclick="retakeQuiz()">Retake Quiz</button>
+            @if(!$quizData->attempts == 1 && $userAttepts->attempts <= $quizData->attempts )
+                <button onclick="retakeQuiz()">Retake Quiz</button>
+            @endif
             <button onclick="goToQuizzes()">Go to All Quizzes</button>
         </div>
     </div>

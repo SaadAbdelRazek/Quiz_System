@@ -82,22 +82,12 @@ class UserController extends Controller
     public function view_quiz_result_attempts($id)
 {
     $user = auth()->user();
-    $results = null;
-
-    // إذا كان هناك مستخدم مسجل دخول، جلب جميع المحاولات له لهذا الكويز
-    if ($user) {
-        $result = Result::where('user_id', $user->id)
-                         ->where('quiz_id', $id)
-                         ->first(); // جلب كل المحاولات بدلًا من أول محاولة
-    }
-
-    // استرجاع بيانات الكويز المحدد
-    $quiz = Quiz::where('is_published', 1)
-                ->where('id', $id)
-                ->with('results')
-                ->first();
-
-    return view('website.quiz-all-result-attempts', compact('quiz', 'result'));
+    $quiz = Quiz::with(['questions.answers'])->findOrFail($id);
+    $result = Result::where('user_id', $user->id)->where('quiz_id', $id)->first();
+    $totalPoints = $quiz->questions->sum('points');
+    return view('website.quiz-all-result-attempts', compact('quiz', 'result','totalPoints'));
 }
+
+
 
 }

@@ -31,6 +31,7 @@
                 <li><a href="{{route('admin-view-quizzes')}}">Your Quizzes</a></li>
                 <li><a href="#">Reports</a></li>
                 <li><a href="#">Settings</a></li>
+                <li><a href="{{route('home')}}">return website</a></li>
                 @endif
             </ul>
         </nav>

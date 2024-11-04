@@ -20,7 +20,7 @@ class CheckQuizAttempts
     public function handle(Request $request, Closure $next)
     {
         // Get the quiz ID from the route
-        $quizId = $request->route('quiz');
+        $quizId = $request->route('id');
 
         // Find the quiz by ID
         $quiz = Quiz::find($quizId);
@@ -35,12 +35,15 @@ class CheckQuizAttempts
         $results = $user->results()->where('quiz_id', $quizId)->get();
 
         // Calculate total attempts
-        $totalAttempts = Result::where('quiz_id', $quizId)->where('user_id',$user->id)->count();
+        $totalAttempts = Result::where('quiz_id', $quizId)->where('user_id',$user->id)->first();
 
         // If attempts exceed or equal the quiz attempts limit, deny access
-        if ($totalAttempts >= $quiz->attempts) {
-            return redirect()->back()
-                ->with('error', 'You have exhausted your attempts for this quiz.');
+        if($totalAttempts != null) {
+            if ($totalAttempts->attempts >= $quiz->attempts) {
+                return redirect()->back()
+                    ->with('error', 'You have exhausted your attempts for this quiz.');
+            }
+            return $next($request);
         }
         return $next($request);
     }
