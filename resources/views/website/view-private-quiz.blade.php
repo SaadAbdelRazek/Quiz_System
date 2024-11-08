@@ -150,4 +150,131 @@
             }
         });
     </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const duration = {{ $quiz->duration }} * 60; // Total duration in seconds
+        const quizId = {{ $quiz->id }}; // Quiz ID
+        const timerElement = document.getElementById('time');
+        const formElement = document.getElementById('quizForm');
+
+        // Storage key for remaining time
+        const storageKey = `quizTimer_${quizId}`;
+
+        // Check remaining time from localStorage or use the default duration
+        let remainingTime = localStorage.getItem(storageKey) ? parseInt(localStorage.getItem(storageKey)) : duration;
+
+        function startTimer() {
+            const timer = setInterval(() => {
+                if (remainingTime <= 0) {
+                    clearInterval(timer);
+                    localStorage.removeItem(storageKey);
+                    submitFormViaAjax(); // Auto-submit the quiz
+                } else {
+                    remainingTime--;
+                    localStorage.setItem(storageKey, remainingTime);
+                    displayTime(remainingTime);
+                }
+            }, 1000);
+        }
+
+        function displayTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            timerElement.textContent = `Time Remaining: ${minutes}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function submitFormViaAjax() {
+            const formData = new FormData(formElement);
+
+            fetch(formElement.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Quiz submitted successfully');
+                        localStorage.removeItem(storageKey);
+                        window.location.href = "/home/quizzes"; // Redirect after successful submission
+                    } else {
+                        alert('Failed to submit the quiz. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting the quiz:', error);
+                    alert('An error occurred while submitting the quiz.');
+                });
+        }
+
+        displayTime(remainingTime); // Initial display of the timer
+        startTimer(); // Start the timer
+        quizForm.addEventListener("submit", function(event) {
+            localStorage.removeItem(storageKey); // Remove quiz answers from localStorage after submission
+        });
+    });
+
+</script>
+
+<script>
+    setInterval(() => {
+        fetch('/keep-alive');
+    }, 5 * 60 * 1000);
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setInterval(() => {
+            fetch('/refresh-session')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+                        document.querySelectorAll('input[name="_token"]').forEach(input => {
+                            input.value = data.token;
+                        });
+                        console.log('CSRF token refreshed successfully.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing CSRF token:', error);
+                });
+        }, 300000);
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const quizForm = document.getElementById("quizForm");
+        const quizId = {{ $quiz->id }}; // Get the quiz ID
+        const storageKey = `quizAnswers_${quizId}`; // Unique key for localStorage
+
+        // Load saved answers from localStorage
+        const savedAnswers = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+        // Pre-select saved answers
+        for (const questionId in savedAnswers) {
+            const answerId = savedAnswers[questionId];
+            const radioButton = document.querySelector(`input[name="answers[${questionId}]"][value="${answerId}"]`);
+            if (radioButton) {
+                radioButton.checked = true;
+            }
+        }
+
+        // Save answer when user selects a radio button
+        quizForm.addEventListener("change", (event) => {
+            if (event.target.type === "radio") {
+                const questionId = event.target.name.match(/\d+/)[0]; // Extract question ID
+                const answerId = event.target.value;
+                savedAnswers[questionId] = answerId; // Save answer for this question
+                localStorage.setItem(storageKey, JSON.stringify(savedAnswers)); // Update localStorage
+            }
+        });
+
+
+        quizForm.addEventListener("submit", function(event) {
+            localStorage.removeItem(storageKey); // Remove quiz answers from localStorage after submission
+        });
+    });
+</script>
 @endsection

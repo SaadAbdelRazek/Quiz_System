@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'check.quiz.attempts' => \App\Http\Middleware\CheckQuizAttempts::class,
         'handleRouteErrors' => \App\Http\Middleware\HandleRouteErrors::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+        'check.quiz.visibility' => \App\Http\Middleware\CheckQuizVisibility::class,
     ];
 }

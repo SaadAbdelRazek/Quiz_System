@@ -24,7 +24,6 @@
                 <div class="question-section">
                     <h2>{{ $index + 1 }}. {{ $question->question_text }}</h2>
 
-                    <!-- معالجة أنواع الأسئلة -->
                     @if ($question->question_type == 'multiple_choice')
                         <ul class="answers">
                             @foreach ($question->answers as $answer)
@@ -57,7 +56,6 @@
                         </ul>
                     @endif
 
-                    <!-- عرض رسالة خطأ لكل سؤال إذا لم يتم اختيار إجابة -->
                     @if ($errors->has("answers.{$question->id}"))
                         <span class="text-danger">{{ $errors->first("answers.{$question->id}") }}</span>
                     @endif
@@ -132,6 +130,9 @@
 
                 displayTime(remainingTime); // Initial display of the timer
                 startTimer(); // Start the timer
+                quizForm.addEventListener("submit", function(event) {
+                    localStorage.removeItem(storageKey); // Remove quiz answers from localStorage after submission
+                });
             });
 
         </script>
@@ -161,5 +162,40 @@
                 }, 300000);
             });
         </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const quizForm = document.getElementById("quizForm");
+                const quizId = {{ $quiz->id }}; // Get the quiz ID
+                const storageKey = `quizAnswers_${quizId}`; // Unique key for localStorage
+
+                // Load saved answers from localStorage
+                const savedAnswers = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+                // Pre-select saved answers
+                for (const questionId in savedAnswers) {
+                    const answerId = savedAnswers[questionId];
+                    const radioButton = document.querySelector(`input[name="answers[${questionId}]"][value="${answerId}"]`);
+                    if (radioButton) {
+                        radioButton.checked = true;
+                    }
+                }
+
+                // Save answer when user selects a radio button
+                quizForm.addEventListener("change", (event) => {
+                    if (event.target.type === "radio") {
+                        const questionId = event.target.name.match(/\d+/)[0]; // Extract question ID
+                        const answerId = event.target.value;
+                        savedAnswers[questionId] = answerId; // Save answer for this question
+                        localStorage.setItem(storageKey, JSON.stringify(savedAnswers)); // Update localStorage
+                    }
+                });
+
+
+                quizForm.addEventListener("submit", function(event) {
+                    localStorage.removeItem(storageKey); // Remove quiz answers from localStorage after submission
+                });
+            });
+        </script>
+
     @endsection
 @endsection
