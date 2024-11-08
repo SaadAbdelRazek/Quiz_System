@@ -1,16 +1,20 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizzerController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StandingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExamineeController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +26,24 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+// Show the verification notice view
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// Verify the email
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill(); // Mark email as verified
+    return redirect('/'); // Redirect to the dashboard after verification
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Resend the verification email
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
 
 Route::get('/', [UserController::class, 'index'])->name('home');
 
@@ -49,23 +71,27 @@ Route::middleware([
             Route::get('/admin-view-examinees/{id?}', [ExamineeController::class, 'index'])->name('admin-view-examinees');
             Route::get('admin-view-contacts', [ContactController::class, 'viewUserMessages'])->name('admin-view-contacts');
 
+    Route::get('/quiz-report/download/{id}', [ReportController::class, 'downloadQuizReport'])->name('quiz.report.download');
+    Route::get('/admin/reports', [ReportController::class, 'viewReportsPage'])->name('reports');
+    Route::get('/admin/add-questions/{quizId}', [QuestionController::class, 'addQuestionsView'])->name('questions.add.view');
+    Route::post('/admin/{id}/add-questions', [QuestionController::class, 'addQuestions'])->name('questions.add');
 });
 
-Route::get('start_create_quiz/{user_id}', [QuizzerController::class, 'index'])->name('start_create_quiz');
+Route::get('start_create_quiz/{user_id}', [QuizzerController::class, 'index'])->name('start_create_quiz')->middleware(['auth', 'verified']);
 
 //----------------------------------------------------------
 
-Route::get('/users/toggle-admin/{id}', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
+Route::get('/users/toggle-admin/{id}', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin')->middleware(['auth', 'verified']);
 
 //---------------------------------------------------------
-Route::get('/home/quizzes', [QuizController::class, 'viewAllQuizzes'])->name('quizzes');
+Route::get('/home/quizzes', [QuizController::class, 'viewAllQuizzes'])->name('quizzes')->middleware(['auth', 'verified']);
 
 
 
 
 //-----------------------------------------------------------------
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
     Route::get('/home/profile', [UserController::class, 'viewProfile'])->name('profile');
     Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz')->middleware('check.quiz.attempts');
     Route::get('/quiz/submit-details/{quizId}/{correctAnswers}/{totalQuestions}', [UserController::class, 'viewQuizSubmitDetails'])->name('quiz-submit-details');
@@ -77,12 +103,20 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('quiz/check-password/{access}', [QuizController::class, 'submit_password_private_quiz'])->name('quiz_password'); // enter the quiz password
-Route::post('quiz/private/{id}', [QuizController::class, 'view_private_quiz'])->name('private_quiz');
+Route::get('quiz/check-password/{access}', [QuizController::class, 'submit_password_private_quiz'])->name('quiz_password')->middleware(['auth', 'verified']); // enter the quiz password
+Route::post('quiz/private/{id}', [QuizController::class, 'view_private_quiz'])->name('private_quiz')->middleware(['auth', 'verified']);
 
-Route::get('/search-quizzes', [QuizController::class, 'searchQuizzes']);
-Route::get('/search', [SearchController::class, 'search'])->name('search');
-Route::post('/contact', [ContactController::class, 'store'])->middleware('handleRouteErrors')->name('contact.store');
-Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->middleware('handleRouteErrors')->name('quiz.submit');
+Route::get('/search-quizzes', [QuizController::class, 'searchQuizzes'])->middleware(['auth', 'verified']);
+Route::get('/search', [SearchController::class, 'search'])->name('search')->middleware(['auth', 'verified']);
+Route::post('/contact', [ContactController::class, 'store'])->middleware('handleRouteErrors')->name('contact.store')->middleware(['auth', 'verified']);
+Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->middleware('handleRouteErrors')->name('quiz.submit')->middleware(['auth', 'verified']);
 
+
+Route::get('/refresh-session', function () {
+    return response()->json(['token' => csrf_token()]);
+});
+
+Route::get('/keep-alive', function () {
+    return response()->json(['status' => 'Session kept alive']);
+})->name('keep-alive');
 

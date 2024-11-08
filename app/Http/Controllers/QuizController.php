@@ -317,7 +317,7 @@ class QuizController extends Controller
                 if(!$quiz){
                     return redirect()->back()->with('error', 'Quiz not found!');
                 }
-
+                session()->put('keep_alive', true);
                 return view('website.view-quiz', compact('quiz','result'));
             }
 
@@ -326,6 +326,7 @@ class QuizController extends Controller
             }
         }
         else{
+            session()->put('keep_alive', true);
             return view('website.view-quiz', compact('quiz'));
         }
 

@@ -23,13 +23,13 @@
                 <li><a href="{{route('admin-view-quizzes')}}">All Quizzes</a></li>
                 <li><a href="#">Standing</a></li>
                 <li><a href="{{route('admin-view-contacts')}}">Contacts</a></li>
-                <li><a href="#">Reports</a></li>
+                <li><a href="{{route('reports')}}">Reports</a></li>
                 <li><a href="#">Settings</a></li>
                 @elseif (auth()->user()->role ==='admin')
                 <li><a href="{{route('admin-dashboard')}}">Dashboard</a></li>
                 <li><a href="{{route('view-create-quiz')}}">Add Quiz</a></li>
                 <li><a href="{{route('admin-view-quizzes')}}">Your Quizzes</a></li>
-                <li><a href="#">Reports</a></li>
+                <li><a href="{{route('reports')}}">Reports</a></li>
                 <li><a href="#">Settings</a></li>
                 <li><a href="{{route('home')}}">return website</a></li>
                 @endif

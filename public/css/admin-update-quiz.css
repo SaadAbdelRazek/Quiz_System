@@ -1,0 +1,119 @@
+/* General Container */
+.content {
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+}
+
+
+
+h2,
+h3 {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #28a745;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Choices Layout */
+/* الحاوية العامة لكل سؤال */
+/* General container for each question */
+.question-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.question-container:hover {
+    transform: scale(1.01);
+}
+
+/* Question header */
+.question-header {
+    margin-bottom: 15px;
+}
+
+.question-header label {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.question-title {
+    font-size: 1em;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+/* Choices section heading */
+.choices-heading {
+    font-size: 1.1em;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+/* Container for choices */
+.choices-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Individual choice item */
+.choice-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Choice text input */
+.choice-text {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Radio button group */
+.radio-group {
+    display: flex;
+    gap: 15px;
+    padding-top: 10px;
+}
