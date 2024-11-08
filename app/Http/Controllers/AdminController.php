@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use App\Models\Quizzer;
 use App\Models\Result;
 use App\Models\User;
 use App\Models\UserActivity;
@@ -13,10 +14,11 @@ class AdminController extends Controller
 {
     public function index(){
         $user=Auth::user();
+        $quizzer = Quizzer::where('user_id',$user->id)->first();
         if($user->role=='admin') {
-            $userExaminees=Result::where('quizzer_id',$user->id)->count();
-            $userQuizzes=Quiz::where('quizzer_id',$user->id)->count();
-            $userActiveQuizzes=Quiz::where('quizzer_id',$user->id)->where('is_published',1)->count();
+            $userExaminees=Result::where('quizzer_id',$quizzer->id)->count();
+            $userQuizzes=Quiz::where('quizzer_id',$quizzer->id)->count();
+            $userActiveQuizzes=Quiz::where('quizzer_id',$quizzer->id)->where('is_published',1)->count();
             return view('admin.admin-dashboard',compact('userExaminees','userQuizzes','userActiveQuizzes'));
         }
         else{

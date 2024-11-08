@@ -21,47 +21,38 @@
                         <li><a href="{{ route('admin-dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('admin-view-users') }}">Users</a></li>
 
-                <li><a href="{{route('admin-dashboard')}}">Dashboard</a></li>
-                <li><a href="{{route('admin-view-users')}}">Users</a></li>
-                <li><a href="{{route('view-create-quiz')}}">Add Quiz</a></li>
-                <li><a href="{{route('admin-view-quizzes')}}">All Quizzes</a></li>
-                <li><a href="#">Standing</a></li>
-                <li><a href="{{route('admin-view-contacts')}}">Contacts</a></li>
-                <li><a href="{{route('reports')}}">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-                @elseif (auth()->user()->role ==='admin')
-                <li><a href="{{route('admin-dashboard')}}">Dashboard</a></li>
-                <li><a href="{{route('view-create-quiz')}}">Add Quiz</a></li>
-                <li><a href="{{route('admin-view-quizzes')}}">Your Quizzes</a></li>
-                <li><a href="{{route('reports')}}">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="{{route('home')}}">return website</a></li>
-                @endif
-            </ul>
-        </nav>
-    </aside>
+                        <!-- Add Quiz Dropdown -->
+                        <li class="sidebar-dropdown" id="quizDropdown">
+                            <a href="#" onclick="toggleSidebarDropdown(event)">Quizzes <i
+                                    class="fas fa-solid fa-caret-down" style="color: white; margin-left:50px"></i></a>
+                            <ul class="sidebar-submenu">
+                                <li><a href="{{ route('view-create-quiz') }}">Create New Quiz</a></li>
+                                <li><a href="{{ route('admin-view-quizzes') }}">Manage All Quizzes</a></li>
+                            </ul>
+                        </li>
 
                         <li><a href="{{ route('admin-view-quizzes') }}">All Quizzes</a></li>
                         <li><a href="#">Standing</a></li>
                         <li><a href="{{ route('admin-view-contacts') }}">Contacts</a></li>
-                        <li><a href="#">Reports</a></li>
+                        <li><a href="{{route('reports')}}">Reports</a></li>
                         {{-- <li><a href="#">Settings</a></li> --}}
                     @elseif (auth()->user()->role === 'admin')
                         <li><a href="{{ route('admin-dashboard') }}">Dashboard</a></li>
 
                         <!-- Add Quiz Dropdown -->
                         <li class="sidebar-dropdown" id="quizDropdown">
-                            <a href="#" onclick="toggleSidebarDropdown(event)">Quizzes <i class="fas fa-solid fa-caret-down" style="color: white; margin-left:50px"></i></a>
+                            <a href="#" onclick="toggleSidebarDropdown(event)">Quizzes <i
+                                    class="fas fa-solid fa-caret-down" style="color: white; margin-left:50px"></i></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('view-create-quiz') }}">Create New Quiz</a></li>
                                 <li><a href="{{ route('admin-view-quizzes') }}">Your Quizzes</a></li>
                             </ul>
                         </li>
 
-                        <li><a href="#">Reports</a></li>
+                        <li><a href="{{route('reports')}}">Reports</a></li>
                         {{-- <li><a href="#">Settings</a></li> --}}
-                        @endif
-                        <li><a href="{{ route('home') }}">Return to Website</a></li>
+                    @endif
+                    <li><a href="{{ route('home') }}">Return to Website</a></li>
                 </ul>
 
                 <style>

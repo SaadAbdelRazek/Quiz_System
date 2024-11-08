@@ -340,21 +340,21 @@ class QuizController extends Controller
     public function adminViewQuizzes()
     {
         // Fetch all quizzes from the database
+        $quizzes = Quiz::whereHas('quizzer', function ($query) {
+            $query->where('user_id', auth()->user()->id);
+        })->get();
+
         if (auth()->user()->role === 'SuperAdmin') {
             // Load all quizzes
-            $quizzes = Quiz::all();
-
+            $allQuizzes = Quiz::all();
         }
         elseif (auth()->user()->role === 'admin') {
-            // Load only quizzes created by the admin through quizzers table
-            $quizzes = Quiz::whereHas('quizzer', function ($query) {
-                $query->where('user_id', auth()->user()->id);
-            })->get();
+            $allQuizzes = null ;
         }
 
 
         // Return the view and pass the quizzes to the Blade template
-        return view('admin.admin-view-quizzes', compact('quizzes'));
+        return view('admin.admin-view-quizzes', compact('quizzes','allQuizzes'));
     }
 
     public function submitQuiz(Request $request, $quizId)
