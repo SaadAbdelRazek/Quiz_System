@@ -26,4 +26,10 @@ class Quizzer extends Model
     {
         return $this->hasMany(Quizzer::class);
     }
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class);
+    }
+
 }

@@ -1,153 +1,15 @@
 @extends('admin.app.layout')
+@section('custom-css')
+    <link rel="stylesheet" href="{{asset('css/admin-update-quiz.css')}}">
+@endsection
 @section('content')
-    <style>
-        /* General Container */
-        .content {
-            padding: 20px;
-            background-color: #f9f9f9;
-            font-family: Arial, sans-serif;
-        }
-
-
-
-        h2,
-        h3 {
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .btn {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background-color: #28a745;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        /* Choices Layout */
-        /* الحاوية العامة لكل سؤال */
-        /* General container for each question */
-        .question-container {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background-color: #f5f5f5;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .question-container:hover {
-            transform: scale(1.01);
-        }
-
-        /* Question header */
-        .question-header {
-            margin-bottom: 15px;
-        }
-
-        .question-header label {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #333;
-        }
-
-        .question-title {
-            font-size: 1em;
-            padding: 8px;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-
-        /* Choices section heading */
-        .choices-heading {
-            font-size: 1.1em;
-            color: #444;
-            margin-bottom: 10px;
-        }
-
-        /* Container for choices */
-        .choices-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        /* Individual choice item */
-        .choice-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        /* Choice text input */
-        .choice-text {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        /* Radio button group */
-        .radio-group {
-            display: flex;
-            gap: 15px;
-            padding-top: 10px;
-        }
-    </style>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Add smooth transition for each form-group
-            const formGroups = document.querySelectorAll(".form-group");
-            formGroups.forEach(group => {
-                group.style.transition = "all 0.3s ease-in-out";
-            });
-
-            // Toggle visibility of choices for multiple choice questions
-            document.querySelectorAll("input[type='radio']").forEach(radio => {
-                radio.addEventListener("change", (event) => {
-                    if (event.target.value === "multiple_choice") {
-                        event.target.closest(".form-group").querySelector(".choices-container")
-                            .style.display = "block";
-                    } else {
-                        event.target.closest(".form-group").querySelector(".choices-container")
-                            .style.display = "none";
-                    }
-                });
-            });
-        });
-    </script>
 
     <div class="content">
         <div class="questions-container">
-            <h2>Edit Quiz</h2>
+            <div class="head-container" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Edit Quiz</h2>
+                <a href="{{route('questions.add.view',$quiz->id)}}" class="add-question-btn" style="padding: 8px 12px; width: 176px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none;">Add New Questions</a>
+            </div>
             <form action="{{ route('quizzes.update', $quiz->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -313,48 +175,6 @@
             </form>
         </div>
     </div>
-    <script>
-        // دالة للتحقق من الحالة وتعيين خاصية required لحقل كلمة المرور
-        function checkVisibility() {
-            const selectedOption = document.querySelector('input[name="visibility"]:checked');
-            const passwordContainer = document.getElementById('password-container');
-            const passwordInput = document.getElementById('password');
-            const warn_pass = document.getElementById('warn-pass');
-
-
-
-            if (selectedOption && selectedOption.value === 'private') {
-                passwordContainer.style.display = 'block';
-                passwordInput.required = true; // جعل الحقل مطلوبًا
-                passwordInput.minLength = 8; // تحديد الحد الأدنى للطول ليكون 6
-
-                if (passwordInput.value.length >= 8) {
-                    warn_pass.style.display = 'none';
-                }
-                // setInterval(() => {
-                //     if (!passwordInput.required || passwordInput.minLength !== 8) {
-                //         alert("Tampering attempt detected! Please do not modify field settings.");
-                //         passwordInput.required = true;
-                //         passwordInput.minLength = 8;
-                //     }
-                // }, 1000); // كل ثانية
-            } else {
-                passwordContainer.style.display = 'none';
-                passwordInput.required = false; // إزالة الخاصية إذا كان الحقل غير ظاهر
-                passwordInput.minLength = 0; // إعادة الحد الأدنى للطول إلى 0 عند الإخفاء
-            }
-
-
-        }
-
-        // تنفيذ الفحص عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            checkVisibility(); // تحقق من حالة الخيار عند تحميل الصفحة
-
-            const visibilityOptions = document.querySelectorAll('input[name="visibility"]');
-            visibilityOptions.forEach(option => {
-                option.addEventListener('change', checkVisibility);
-            });
-        });
+    <script src="{{asset('js/admin-update-quiz.js')}}">
     </script>
 @endsection
