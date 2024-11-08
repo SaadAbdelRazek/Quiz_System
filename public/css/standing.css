@@ -85,10 +85,16 @@ h1 {
     flex: 1;
     text-align: center;
 }
+.name{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 
 /* Rank Icon */
 .rank:before {
-    content: "\1F3C6"; /* Trophy Emoji */
+    /* content: "\1F3C6";  */
     display: inline-block;
     font-size: 1.2em;
     margin-right: 5px;

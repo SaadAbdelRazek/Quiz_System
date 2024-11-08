@@ -9,9 +9,13 @@
             <div class="user-info">
                 <span>Welcome, {{$user_data->name}}</span>
                 @if($user_data->profile_photo_path)
+                <a href="{{route('profile.show')}}">
                     <img src="{{asset('storage/'. $user_data->profile_photo_path)}}" alt="{{ $user_data->name }}"  class="profile-picture">
+                </a>
                 @else
+                <a href="{{route('profile.show')}}">
                     <img src="{{asset('images/def.jpg')}}" alt="{{ $user_data->name }}" class="profile-picture">
+                </a>
                 @endif
             </div>
         </header>

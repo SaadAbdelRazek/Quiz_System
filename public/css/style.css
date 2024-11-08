@@ -249,7 +249,7 @@ nav ul li a:hover {
     padding: 20px;
     transition: transform 0.3s, box-shadow 0.3s; /* Transition for hover effects */
     width: 40%;
-    max-width: 40%;
+    max-width: 25%;
     min-height: 300px;
     display: flex;
     transition:.5s;

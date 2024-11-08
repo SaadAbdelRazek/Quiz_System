@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'Admin' => \App\Http\Middleware\Admin::class,
         'check.quiz.attempts' => \App\Http\Middleware\CheckQuizAttempts::class,
         'handleRouteErrors' => \App\Http\Middleware\HandleRouteErrors::class,
+        'QuizAccess' => \App\Http\Middleware\QuizAccess::class,
 
     ];
 }

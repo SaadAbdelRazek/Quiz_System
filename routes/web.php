@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', [UserController::class, 'index'])->name('home');
 
 Route::middleware([
@@ -69,10 +70,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/home/profile', [UserController::class, 'viewProfile'])->name('profile');
     Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz')->middleware('check.quiz.attempts');
     Route::get('/quiz/submit-details/{quizId}/{correctAnswers}/{totalQuestions}', [UserController::class, 'viewQuizSubmitDetails'])->name('quiz-submit-details');
-    Route::get('/quiz/standing/{id}', [StandingController::class, 'viewQuizStanding'])->name('quiz-standing');
+    Route::get('/quiz/standing/{id}', [StandingController::class, 'viewQuizStanding'])->name('quiz-standing')->middleware('QuizAccess');
     Route::get('/quiz/submit-thank', [UserController::class, 'viewQuizThank'])->name('quiz-results');
 
-    Route::get('/quiz/view-quiz-result/{id}', [UserController::class, 'view_quiz_result_attempts'])->name('view_quiz_result');
+    Route::get('/quiz/view-quiz-result/{id}', [UserController::class, 'view_quiz_result_attempts'])->name('view_quiz_result')->middleware('QuizAccess');
 
 });
 
@@ -86,3 +87,10 @@ Route::post('/contact', [ContactController::class, 'store'])->middleware('handle
 Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->middleware('handleRouteErrors')->name('quiz.submit');
 
 
+Route::get('/keep-alive', function () {
+    return response()->json(['status' => 'Session kept alive']);
+})->name('keep-alive');
+
+Route::get('/refresh-session', function () {
+    return response()->json(['token' => csrf_token()]);
+});

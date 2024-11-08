@@ -27,7 +27,7 @@
                 <th>#</th>
                 <th>Active</th>
                 <th>Title</th>
-                <th>Subject</th>
+                {{-- <th>Subject</th> --}}
                 <th>Link</th>
                 <th>actions</th>
             </tr>
@@ -49,9 +49,9 @@
                     <td style="width: 10px; text-align:center"><i class="fa-solid fa-circle-xmark" style="color: red"></i></td>
                     @endif
                     <td>{{$quiz->title}}</td>
-                    <td>
+                    {{-- <td>
                         {{$quiz->subject}}
-                    </td>
+                    </td> --}}
                     <td style="max-width: 100px">
                         @if ($quiz->access_token)
                         <div style="display:flex; align-items: center;">

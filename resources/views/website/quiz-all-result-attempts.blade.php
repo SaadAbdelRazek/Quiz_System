@@ -114,11 +114,11 @@
                 @endphp
 
                 @if ($percentage <= 0.50)
-                    <h2 style="color:red;">Your Score: {{ $result->points }} / {{ $totalPoints }}</h2>
+                    <h2 style="color:red;">Your Score: <span style="border-radius: 50%; border:1px solid gray">{{ $result->points }} / {{ $totalPoints }}</span></h2>
                 @elseif ($percentage >= 0.75 && $percentage < 0.90) <!-- تصحيح النسبة هنا -->
-                <h2>Your Score: {{ $result->points }} / {{ $totalPoints }}</h2>
+                <h2>Your Score: <span style="border-radius: 50%; border:1px solid gray">{{ $result->points }} / {{ $totalPoints }}</span></h2>
                 @elseif ($percentage >= 0.90)
-                    <h2 style="color: blue;">Your Score: {{ $result->points }} / {{ $totalPoints }}</h2>
+                    <h2 style="color: blue;">Your Score: <span style="border-radius:5px; padding:1px; border-bottom:2px solid blue; ">{{ $result->points }} / {{ $totalPoints }}</span></h2>
                 @endif
             </div>
 

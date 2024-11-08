@@ -19,7 +19,7 @@ html, body {
 
 .quiz-section {
     padding: 50px 0;
-    min-height: 100vh;
+    /* min-height: 100vh; */
 }
 
 .container {
@@ -36,7 +36,7 @@ html, body {
 
 .quiz-card {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -44,6 +44,7 @@ html, body {
     width: unset;
     max-width: unset;
     transition: .5s;
+    
 }
 
 .quiz-card:hover {
@@ -105,7 +106,7 @@ html, body {
 .quiz-card {
     padding: 20px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 15px;
     margin-bottom: 15px;
     transition: 0.5s ease;
 }
