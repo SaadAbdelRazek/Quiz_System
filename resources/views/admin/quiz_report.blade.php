@@ -26,6 +26,7 @@
         <thead>
         <tr>
             <th>Student Name</th>
+            <th>Email</th>
             <th>Points</th>
         </tr>
         </thead>
@@ -33,7 +34,12 @@
         @foreach ($results as $result)
             <tr>
                 <td>{{ $result->student_name }}</td>
-                <td>{{ $result->points }}</td>
+                    @if ($result->email)
+                    <td>{{ $result->email }}</td>
+                    @else
+                    <td>{{ $result->user->email }}</td>
+                    @endif
+                <td>{{ $result->points }}/{{$quizPoints}}</td>
             </tr>
         @endforeach
         </tbody>

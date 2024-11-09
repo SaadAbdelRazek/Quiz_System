@@ -95,10 +95,10 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('/home/profile', [UserController::class, 'viewProfile'])->name('profile');
     Route::get('/home/quizzes/{id}', [QuizController::class, 'viewQuiz'])->name('view-quiz')->middleware('check.quiz.attempts');
     Route::get('/quiz/submit-details/{quizId}/{correctAnswers}/{totalQuestions}', [UserController::class, 'viewQuizSubmitDetails'])->name('quiz-submit-details');
-    Route::get('/quiz/standing/{id}', [StandingController::class, 'viewQuizStanding'])->name('quiz-standing');
+    Route::get('/quiz/standing/{id}', [StandingController::class, 'viewQuizStanding'])->name('quiz-standing')->middleware('QuizAccess');
     Route::get('/quiz/submit-thank', [UserController::class, 'viewQuizThank'])->name('quiz-results');
 
-    Route::get('/quiz/view-quiz-result/{id}', [UserController::class, 'view_quiz_result_attempts'])->name('view_quiz_result');
+    Route::get('/quiz/view-quiz-result/{id}', [UserController::class, 'view_quiz_result_attempts'])->name('view_quiz_result')->middleware('QuizAccess');
 
 });
 
@@ -109,6 +109,7 @@ Route::post('quiz/private/{id}', [QuizController::class, 'view_private_quiz'])->
 Route::get('/search-quizzes', [QuizController::class, 'searchQuizzes'])->middleware(['auth', 'verified']);
 Route::get('/search', [SearchController::class, 'search'])->name('search')->middleware(['auth', 'verified']);
 Route::post('/contact', [ContactController::class, 'store'])->middleware('handleRouteErrors')->name('contact.store')->middleware(['auth', 'verified']);
+
 Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->middleware('handleRouteErrors')->middleware(['auth', 'verified'])->name('quiz.submit');
 
 
@@ -119,4 +120,3 @@ Route::get('/refresh-session', function () {
 Route::get('/keep-alive', function () {
     return response()->json(['status' => 'Session kept alive']);
 })->name('keep-alive');
-

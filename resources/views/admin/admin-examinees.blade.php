@@ -21,20 +21,22 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($examinees as $examinee)
+                @foreach($examinees as $examinee)
                 <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$examinee->quiz->title}}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $examinee->quiz->title }}</td>
+                    <td>{{ $examinee->user->name }}</td>
+
                     <td>
-                        {{$examinee->user->name}}
+                        <a class="a-table" href="mailto:{{ $examinee->user->email }}">{{ $examinee->user->email }}</a>
                     </td>
 
                     <td>
-                        <a class="a-table" href="mailto:{{$examinee->user->email}}">{{$examinee->user->email}}</a>
-                    </td>
-
-                    <td>
-                        {{$examinee->correct_answers}}
+                        @php
+                            // حساب مجموع نقاط الكويز لهذا الممتحن
+                            $quizPoints = $examinee->quiz->questions->sum('points');
+                        @endphp
+                        {{ $examinee->points }} / {{ $quizPoints }}
                     </td>
 
                     <td>
@@ -42,6 +44,7 @@
                     </td>
                 </tr>
             @endforeach
+
             </tbody>
         </table>
     </div>

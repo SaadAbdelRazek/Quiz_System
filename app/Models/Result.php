@@ -18,6 +18,7 @@ class Result extends Model
         'total_questions',
         'points',
         'attempts',
+        'email'
     ];
 
     /**

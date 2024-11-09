@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use App\Models\Question;
 use App\Models\Result;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,7 @@ class StandingController extends Controller
         if(!$quiz){
             return redirect()->back();
         }
+        $quizPoints = Question::where('quiz_id',$id)->sum('points');
         // Get the latest attempt for each user for each quiz
         $results = Result::select('user_id', 'quiz_id', 'correct_answers', 'attempts','points')->where('quiz_id', $id)
             ->whereIn('id', function ($query) {
@@ -27,6 +29,6 @@ class StandingController extends Controller
 
         $rowsCount = count($results);
 
-        return view('website.quiz-standing', compact(['results', 'quiz', 'rowsCount']));
+        return view('website.quiz-standing', compact(['results', 'quiz', 'rowsCount','quizPoints']));
     }
 }

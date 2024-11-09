@@ -3,6 +3,6 @@
     height: 50px; /* Set the desired height */
     border-radius: 50%; /* Make it circular */
     object-fit: cover; /* Ensure the image covers the element without distortion */
-    border: 2px solid #333; /* Optional: Add a border for better visibility */
+    
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
 }

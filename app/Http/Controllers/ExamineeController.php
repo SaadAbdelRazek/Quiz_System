@@ -12,24 +12,34 @@ use Illuminate\Http\Request;
 
 class ExamineeController extends Controller
 {
-    public function index($id = null){
-        if($id){
+    public function index($id = null) {
+        $quizPoints = 0;
+        $examinees = collect(); // تهيئة قائمة فارغة بشكل افتراضي
+
+        if ($id) {
+            // جلب النقاط إذا تم تمرير `$id`
+            $quizPoints = Question::where('quiz_id', $id)->sum('points');
             $state = 1;
-            $examinees = Result::with('user')->where('quiz_id',$id)->get();
-        }
-        else{
-            $quiz = Quiz::with('quizzer')->get();
+            $examinees = Result::with('user')->where('quiz_id', $id)->get();
+        } else {
             $state = 0;
-            if(auth()->user()->role == 'SuperAdmin'){
+            $quiz = Quiz::with(['quizzer','questions'])->get();
+            // $quizPoints = sum($quiz->questions);
 
-                $examinees = Result::with(['user','quiz'])->get();
-            }
-            elseif(auth()->user()->role == 'admin'){
-                $quizzer = Quizzer::where('user_id',auth()->user()->id)->first();
+            if (auth()->user()->role == 'SuperAdmin') {
+                // جلب جميع المستجيبين لكل الكويزات
+                $examinees = Result::with(['user', 'quiz'])->get();
+            } elseif (auth()->user()->role == 'admin') {
+                // جلب الكويزر الخاص بالـ`admin` الحالي فقط
+                $quizzer = Quizzer::where('user_id', auth()->user()->id)->first();
 
-                $examinees = Result::with(['user','quiz','quizzer'])->where('quizzer_id', $quizzer->id)->get();
+                if ($quizzer) {
+                    $examinees = Result::with(['user', 'quiz', 'quizzer'])->where('quizzer_id', $quizzer->id)->get();
+                }
             }
         }
-        return view('admin.admin-examinees',compact('examinees','state'));
+
+        return view('admin.admin-examinees', compact('examinees', 'state', 'quizPoints'));
     }
+
 }

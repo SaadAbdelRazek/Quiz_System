@@ -311,6 +311,7 @@ class QuizController extends Controller
         $result = Result::where('user_id', auth()->user()->id)->where('quiz_id', $id)->first();
         $quiz = Quiz::with(['questions.answers'])->with('quizzer')->findOrFail($id);
 
+        if($quiz->visibility == 'public'){
         if($result){
             if($result->attempts < $quiz->attempts){
 
@@ -329,6 +330,9 @@ class QuizController extends Controller
             session()->put('keep_alive', true);
             return view('website.view-quiz', compact('quiz'));
         }
+    }
+
+    return redirect()->route('quiz_password',$quiz->access_token);
 
 
     }
@@ -336,20 +340,21 @@ class QuizController extends Controller
     public function adminViewQuizzes()
     {
         // Fetch all quizzes from the database
+        $quizzes = Quiz::whereHas('quizzer', function ($query) {
+            $query->where('user_id', auth()->user()->id);
+        })->get();
+
         if (auth()->user()->role === 'SuperAdmin') {
             // Load all quizzes
-            $quizzes = Quiz::all();
+            $allQuizzes = Quiz::all();
         }
         elseif (auth()->user()->role === 'admin') {
-            // Load only quizzes created by the admin through quizzers table
-            $quizzes = Quiz::whereHas('quizzer', function ($query) {
-                $query->where('user_id', auth()->user()->id);
-            })->get();
+            $allQuizzes = null ;
         }
 
 
         // Return the view and pass the quizzes to the Blade template
-        return view('admin.admin-view-quizzes', compact('quizzes'));
+        return view('admin.admin-view-quizzes', compact('quizzes','allQuizzes'));
     }
 
     public function submitQuiz(Request $request, $quizId)
@@ -398,6 +403,7 @@ class QuizController extends Controller
     if ($result_attempt) {
         if ($result_attempt->attempts < $quiz_attempt->attempts) {
             // زيادة عدد المحاولات إذا كانت أقل من الحد الأقصى
+
             $result_attempt->attempts++;
             $result_attempt->correct_answers = $correctAnswers;
             $result_attempt->total_questions = $totalQuestions;
@@ -417,6 +423,7 @@ class QuizController extends Controller
             'total_questions' => $totalQuestions,
             'points' => $points,
             'attempts' => 1,
+            'email' => $request->email
         ]);
     }
     $quizData=Quiz::where('id',$quizId)->first();

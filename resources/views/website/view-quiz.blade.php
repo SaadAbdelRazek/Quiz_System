@@ -14,7 +14,7 @@
         <div class="quiz-header">
             <h1>{{ $quiz->title }} Quiz</h1>
             @if($quiz->quizzer->user_id != auth()->id())
-                <div id="timer" class="timer"> <span id="time"></span></div>
+                <div id="timer" class="timer">Time Remaining: <span id="time"></span></div>
             @endif
         </div>
 
@@ -72,37 +72,40 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                const duration = {{ $quiz->duration }} * 60; // Total duration in seconds
-                const quizId = {{ $quiz->id }}; // Quiz ID
+                const duration = {{ $quiz->duration }} * 60; // المدة الزمنية بالكويز
+                const quizId = {{ $quiz->id }}; // معرف الكويز
                 const timerElement = document.getElementById('time');
                 const formElement = document.getElementById('quizForm');
 
-                // Storage key for remaining time
-                const storageKey = `quizTimer_${quizId}`;
+                // مفتاح التخزين الخاص بالوقت المتبقي لكل كويز
+                const storageKey = `quizTimer_${quizId}_{{ auth()->id() }}`;
 
-                // Check remaining time from localStorage or use the default duration
+                // إعادة ضبط المؤقت عند الدخول إلى كويز جديد أو بدء كويز جديد
                 let remainingTime = localStorage.getItem(storageKey) ? parseInt(localStorage.getItem(storageKey)) : duration;
 
+                // تحديث العرض عند فتح الكويز أو إعادة فتحه
                 function startTimer() {
                     const timer = setInterval(() => {
                         if (remainingTime <= 0) {
                             clearInterval(timer);
-                            localStorage.removeItem(storageKey);
-                            submitFormViaAjax(); // Auto-submit the quiz
+                            localStorage.removeItem(storageKey); // إزالة التخزين المحلي عند انتهاء الوقت
+                            submitFormViaAjax();
                         } else {
                             remainingTime--;
-                            localStorage.setItem(storageKey, remainingTime);
+                            localStorage.setItem(storageKey, remainingTime); // تحديث الوقت المتبقي
                             displayTime(remainingTime);
                         }
                     }, 1000);
                 }
 
+                // تنسيق العرض للوقت المتبقي
                 function displayTime(seconds) {
                     const minutes = Math.floor(seconds / 60);
                     const sec = seconds % 60;
-                    timerElement.textContent = `Time Remaining: ${minutes}:${sec < 10 ? '0' : ''}${sec}`;
+                    timerElement.textContent = `${minutes}:${sec < 10 ? '0' : ''}${sec}`;
                 }
 
+                // الإرسال التلقائي عند انتهاء الوقت باستخدام AJAX
                 function submitFormViaAjax() {
                     const formData = new FormData(formElement);
 
@@ -113,29 +116,35 @@
                         },
                         body: formData
                     })
-                        .then(response => {
-                            if (response.ok) {
-                                alert('Quiz submitted successfully');
-                                localStorage.removeItem(storageKey);
-                                window.location.href = "/home/quizzes"; // Redirect after successful submission
-                            } else {
-                                alert('Failed to submit the quiz. Please try again.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error submitting the quiz:', error);
-                            alert('An error occurred while submitting the quiz.');
-                        });
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Quiz submitted successfully');
+                            localStorage.removeItem(storageKey); // إزالة التخزين بعد الإرسال
+                            window.location.href = "/home/quizzes";
+                        } else {
+                            alert('Failed to submit the quiz. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error submitting the quiz:', error);
+                        alert('An error occurred while submitting the quiz.');
+                    });
                 }
 
+<<<<<<< HEAD
                 displayTime(remainingTime); // Initial display of the timer
                 startTimer(); // Start the timer
                 quizForm.addEventListener("submit", function(event) {
                     localStorage.removeItem(storageKey); // Remove quiz answers from localStorage after submission
                 });
+=======
+                // تحديث العداد وبدء تشغيل المؤقت
+                displayTime(remainingTime);
+                startTimer();
+>>>>>>> 00050b1119ce5f1292e74e03f101ae7eabfd0867
             });
-
         </script>
+
 
         <script>
             setInterval(() => {
