@@ -17,11 +17,11 @@
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">X</button>
-        </div>
-    @endif
+    <div id="error-message" class="error-message alert alert-warning alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" onclick="closeAlert()" aria-label="Close">X</button>
+    </div>
+@endif
 
     <style>
         .result-container {

@@ -12,7 +12,9 @@
 </head>
 
 <body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <div class="dashboard-container">
+
         <aside class="sidebar">
             <h2>Admin Panel</h2>
             <nav>
@@ -54,7 +56,13 @@
                     @endif
                     <li><a href="{{ route('home') }}">Return to Website</a></li>
                 </ul>
-
+                <script>
+                    // التحكم في إظهار الشريط الجانبي عند الضغط على الزر
+                    function toggleSidebar() {
+                        const sidebar = document.querySelector('.sidebar');
+                        sidebar.classList.toggle('active');
+                    }
+                </script>
                 <style>
                     /* تنسيق القائمة الجانبية */
 

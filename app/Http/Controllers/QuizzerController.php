@@ -28,6 +28,9 @@ class QuizzerController extends Controller
         }
         $user->save();
     }
+    if (Quizzer::where('user_id', $userId)->exists() && auth()->user()->role == 'user') {
+        return redirect()->back()->with('error','you has been blocked by admin, please contact with admin to know the problem');
+    }
 
     // إعادة التوجيه إلى لوحة التحكم
     return redirect()->route('admin-dashboard')->with('status', 'You are now an admin and can create quizzes!');

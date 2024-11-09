@@ -31,7 +31,7 @@
                     <label for="quiz-description">Description:</label>
                     <textarea id="quiz-description" name="description" class="form-control" required>{{ $quiz->title }}</textarea>
                 </div>
-                <div class="form-group" style="display: flex; align-items:center; gap:20px">
+                <div class="form-group" style=" align-items:center; gap:20px">
                     <label for="quiz-duration">Duration (in minutes):</label>
                     <input type="number" id="quiz-duration" name="duration" class="form-control" min="0"
                         value="{{ $quiz->duration }}" required style="width: 150px;">

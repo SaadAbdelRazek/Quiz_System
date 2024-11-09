@@ -21,6 +21,7 @@ class ExamineeController extends Controller
             $quizPoints = Question::where('quiz_id', $id)->sum('points');
             $state = 1;
             $examinees = Result::with('user')->where('quiz_id', $id)->get();
+            $allExaminees = null ;
         } else {
             $state = 0;
             $quiz = Quiz::with(['quizzer','questions'])->get();
@@ -28,10 +29,16 @@ class ExamineeController extends Controller
 
             if (auth()->user()->role == 'SuperAdmin') {
                 // جلب جميع المستجيبين لكل الكويزات
-                $examinees = Result::with(['user', 'quiz'])->get();
+                $allExaminees = Result::with(['user', 'quiz'])->get();
+                $quizzer = Quizzer::where('user_id', auth()->user()->id)->first();
+
+                if ($quizzer) {
+                    $examinees = Result::with(['user', 'quiz', 'quizzer'])->where('quizzer_id', $quizzer->id)->get();
+                }
             } elseif (auth()->user()->role == 'admin') {
                 // جلب الكويزر الخاص بالـ`admin` الحالي فقط
                 $quizzer = Quizzer::where('user_id', auth()->user()->id)->first();
+                $allExaminees = null ;
 
                 if ($quizzer) {
                     $examinees = Result::with(['user', 'quiz', 'quizzer'])->where('quizzer_id', $quizzer->id)->get();
@@ -39,7 +46,7 @@ class ExamineeController extends Controller
             }
         }
 
-        return view('admin.admin-examinees', compact('examinees', 'state', 'quizPoints'));
+        return view('admin.admin-examinees', compact('examinees', 'allExaminees', 'state', 'quizPoints'));
     }
 
 }

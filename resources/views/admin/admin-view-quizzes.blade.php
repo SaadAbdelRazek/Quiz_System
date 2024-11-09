@@ -22,7 +22,7 @@
     <div class="container">
         @if (auth()->user()->role == 'SuperAdmin')
         <h3>All quizzes</h3>
-        <table class="users-table">
+        <table class="table">
             <thead>
             <tr>
                 <th>#</th>
@@ -59,7 +59,7 @@
                             <button class="copy-button" title="Copy Link" onclick="copyLink()">
                                 <i class="fas fa-copy"></i>
                             </button>
-                            <a href="{{ route('quiz_password', $quiz->access_token) }}" id="quiz_link" style="padding:10px; border:none; background-color: unset; width:fit-content; color:rgb(31, 93, 179);">{{ $quiz->access_token }}</a>
+                            <a href="{{ route('quiz_password', $quiz->access_token) }}" id="quiz_link" style="">{{ $quiz->access_token }}</a>
                         </div>
                         <span id="copy-success" style="display: none; color: green; margin-left: 10px;">
                             <i class="fas fa-check-circle"></i> Copied!
@@ -94,24 +94,24 @@
 
 
                     <td style="display: flex; justify-content:center">
-                        <a style="padding:10px; border:none; background-color: unset;width:fit-content;color:rgb(0, 106, 255)" href="{{route('quizzes.edit',$quiz->id)}}" title="edit"><i class="fas fa-edit"></i></a>
+                        <a id="action-td" style="padding:10px; border:none; background-color: unset;width:fit-content;color:rgb(0, 106, 255)" href="{{route('quizzes.edit',$quiz->id)}}" title="edit"><i class="fas fa-edit"></i></a>
                         <form action="{{route('quiz.destroy', $quiz->id)}}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button style="background-color: unset;width:fit-content;color:rgb(218, 34, 34)" title="delete" type="submit" onclick="return confirm('Are you sure you want to delete this quiz?');"><i class="fas fa-trash"></i></button>
+                            <button id="action-td" style="background-color: unset;width:fit-content;color:rgb(218, 34, 34)" title="delete" type="submit" onclick="return confirm('Are you sure you want to delete this quiz?');"><i class="fas fa-trash"></i></button>
                         </form>
 
                         <form action="{{route('update-quiz-activate',$quiz->id)}}" method="POST">
                             @csrf
                             @method('PUT')
                             @if ($quiz->is_published==1)
-                            <button style="background-color: unset;width:fit-content;color:black" title="disable"><i class="fas fa-regular fa-eye-slash"></i></button>
+                            <button id="action-td" style="background-color: unset;width:fit-content;color:black" title="disable"><i class="fas fa-regular fa-eye-slash"></i></button>
                             @elseif ($quiz->is_published==0)
-                            <button style="background-color: unset;width:fit-content;color:black" title="enable"><i class="fas fa-regular fa-eye"></i></button>
+                            <button id="action-td" style="background-color: unset;width:fit-content;color:black" title="enable"><i class="fas fa-regular fa-eye"></i></button>
                             @endif
                         </form>
 
-                        <a style="padding:10px; border:none; background-color: unset;width:fit-content;color:rgb(31, 93, 179)" href="{{route('admin-view-examinees',$quiz->id)}}" title="show examinees"><i class="fas fa-solid fa-users"></i></a>
+                        <a id="action-td" style="padding:10px; border:none; background-color: unset;width:fit-content;color:rgb(31, 93, 179)" href="{{route('admin-view-examinees',$quiz->id)}}" title="show examinees"><i class="fas fa-solid fa-users"></i></a>
 
 
                     </td>
@@ -119,11 +119,11 @@
             @endforeach
             </tbody>
         </table>
-        <a class="a-table" href="{{route('admin-view-examinees')}}">show all of examinees</a>
+        {{-- <a class="a-table" href="{{route('admin-view-examinees')}}">show all of examinees</a> --}}
         @endif
 
         <h3>your Quizzes</h3>
-        <table class="users-table">
+        <table class="table">
             <thead>
             <tr>
                 <th>#</th>
@@ -160,7 +160,7 @@
                             <button class="copy-button" title="Copy Link" onclick="copyLink()">
                                 <i class="fas fa-copy"></i>
                             </button>
-                            <a href="{{ route('quiz_password', $quiz->access_token) }}" id="quiz_link" style="padding:10px; border:none; background-color: unset; width:fit-content; color:rgb(31, 93, 179);">{{ $quiz->access_token }}</a>
+                            <a href="{{ route('quiz_password', $quiz->access_token) }}" id="quiz_link" style="">{{ $quiz->access_token }}</a>
                         </div>
                         <span id="copy-success" style="display: none; color: green; margin-left: 10px;">
                             <i class="fas fa-check-circle"></i> Copied!
@@ -195,24 +195,24 @@
 
 
                     <td style="display: flex; justify-content:center">
-                        <a style="padding:10px; border:none; background-color: unset;width:fit-content;color:rgb(0, 106, 255)" href="{{route('quizzes.edit',$quiz->id)}}" title="edit"><i class="fas fa-edit"></i></a>
+                        <a id="action-td" style=" border:none; background-color: unset;width:fit-content;color:rgb(0, 106, 255)" href="{{route('quizzes.edit',$quiz->id)}}" title="edit"><i class="fas fa-edit"></i></a>
                         <form action="{{route('quiz.destroy', $quiz->id)}}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button style="background-color: unset;width:fit-content;color:rgb(218, 34, 34)" title="delete" type="submit" onclick="return confirm('Are you sure you want to delete this quiz?');"><i class="fas fa-trash"></i></button>
+                            <button id="action-td" style="background-color: unset;width:fit-content;color:rgb(218, 34, 34)" title="delete" type="submit" onclick="return confirm('Are you sure you want to delete this quiz?');"><i class="fas fa-trash"></i></button>
                         </form>
 
                         <form action="{{route('update-quiz-activate',$quiz->id)}}" method="POST">
                             @csrf
                             @method('PUT')
                             @if ($quiz->is_published==1)
-                            <button style="background-color: unset;width:fit-content;color:black" title="disable"><i class="fas fa-regular fa-eye-slash"></i></button>
+                            <button id="action-td" style="background-color: unset;width:fit-content;color:black" title="disable"><i class="fas fa-regular fa-eye-slash"></i></button>
                             @elseif ($quiz->is_published==0)
-                            <button style="background-color: unset;width:fit-content;color:black" title="enable"><i class="fas fa-regular fa-eye"></i></button>
+                            <button id="action-td" style="background-color: unset;width:fit-content;color:black" title="enable"><i class="fas fa-regular fa-eye"></i></button>
                             @endif
                         </form>
 
-                        <a style="padding:10px; border:none; background-color: unset;width:fit-content;color:rgb(31, 93, 179)" href="{{route('admin-view-examinees',$quiz->id)}}" title="show examinees"><i class="fas fa-solid fa-users"></i></a>
+                        <a id="action-td" style=" border:none; background-color: unset;width:fit-content;color:rgb(31, 93, 179)" href="{{route('admin-view-examinees',$quiz->id)}}" title="show examinees"><i class="fas fa-solid fa-users"></i></a>
 
 
                     </td>
