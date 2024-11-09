@@ -31,7 +31,7 @@
                 <div id="editor-container"></div>
                 <input type="hidden" id="quiz-description" name="description" required>
             </div>
-            <div class="form-group" style="display: flex; align-items:center; gap:20px">
+            <div class="form-group" id="dur-att" style=" align-items:center; gap:20px">
                 <label for="quiz-duration">Duration (in minutes):</label>
                 <span style="font-size: 11px; color:rgb(226, 52, 52)">(note: 0 means no time)</span>
                 <input type="number" id="quiz-duration" name="duration" min="0" value="0" required style="width: 150px;">

@@ -1,5 +1,14 @@
 @extends('website.app.layout')
 @section('content')
+@if (session('error'))
+    <div id="error-message" class="error-message alert alert-warning alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" onclick="closeAlert()" aria-label="Close">X</button>
+    </div>
+@endif
+
+
+
     <!-- Home Section -->
     <section id="home" class="home-section">
         <div class="cover-overlay">

@@ -16,18 +16,19 @@
     @endif
 
     @if (session('error'))
-        <div class="error-message alert alert-warning alert-dismissible fade show" style="" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" style="" data-bs-dismiss="alert" aria-label="Close">X</button>
-        </div>
-    @endif
-    <script>
-        function close() {
-
-            var close = document.getElementById('error-message');
+    <div id="error-message" class="error-message alert alert-warning alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" onclick="closeAlert()" aria-label="Close">X</button>
+    </div>
+@endif
+<script>
+    function closeAlert() {
+        var close = document.getElementById('error-message');
+        if (close) {
             close.style.display = 'none';
         }
-    </script>
+    }
+</script>
     <br>
     <div class="search-container">
         <h1>Available Quizzes</h1>

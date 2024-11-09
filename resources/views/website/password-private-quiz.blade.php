@@ -1,8 +1,8 @@
 
 @if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+    <div id="error-message" class="error-message alert alert-warning alert-dismissible fade show" role="alert">
         {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">X</button>
+        <button type="button" class="btn-close" onclick="closeAlert()" aria-label="Close">X</button>
     </div>
 @endif
 
@@ -11,7 +11,7 @@
         <h3>Quiz : {{$quiz->title}}</h3>
         @csrf
         <div class="input-group">
-            
+
             <input type="password" name="password" placeholder="Enter Quiz Password" class="form-control" required>
             <button type="submit" class="submit-btn">Submit</button>
         </div>

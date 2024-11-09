@@ -189,6 +189,14 @@
 
 <!-- JavaScript -->
 <script src="{{asset('js/script.js')}}"></script>
+<script>
+    function closeAlert() {
+        var close = document.getElementById('error-message');
+        if (close) {
+            close.style.display = 'none';
+        }
+    }
+</script>
 @yield('custom-js')
 </body>
 </html>

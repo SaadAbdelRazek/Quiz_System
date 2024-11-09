@@ -5,8 +5,9 @@
 
 @section('content')
     <div class="container">
-        <h1>Quizzes Management</h1>
-        <table class="users-table">
+        @if (auth()->user()->role == 'SuperAdmin' && $allExaminees)
+        <h3>All examinees</h3>
+        <table class="table">
             <thead>
             <tr>
                 <th>#</th>
@@ -17,7 +18,53 @@
                 <th>email</th>
                 <th>quiz result</th>
 
-                <th>actions</th>
+                {{-- <th>actions</th> --}}
+            </tr>
+            </thead>
+            <tbody>
+                @foreach($allExaminees as $examinee)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $examinee->quiz->title }}</td>
+                    <td>{{ $examinee->user->name }}</td>
+
+                    <td>
+                        <a class="a-table" href="mailto:{{ $examinee->user->email }}">{{ $examinee->user->email }}</a>
+                    </td>
+
+                    <td>
+                        @php
+                            // حساب مجموع نقاط الكويز لهذا الممتحن
+                            $quizPoints = $examinee->quiz->questions->sum('points');
+                        @endphp
+                        {{ $examinee->points }} / {{ $quizPoints }}
+                    </td>
+
+                    {{-- <td>
+                        <i class="fas fa-trash"></i>
+                    </td> --}}
+                </tr>
+            @endforeach
+
+            </tbody>
+        </table>
+        @endif
+
+
+
+        <h3>your examinees</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                @if ($state = 1)
+                <th>quiz</th>
+                @endif
+                <th>examinee</th>
+                <th>email</th>
+                <th>quiz result</th>
+
+                {{-- <th>actions</th> --}}
             </tr>
             </thead>
             <tbody>
@@ -39,9 +86,9 @@
                         {{ $examinee->points }} / {{ $quizPoints }}
                     </td>
 
-                    <td>
+                    {{-- <td>
                         <i class="fas fa-trash"></i>
-                    </td>
+                    </td> --}}
                 </tr>
             @endforeach
 

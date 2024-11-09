@@ -428,6 +428,7 @@ footer {
 
     nav ul.show {
         display: flex; /* Show menu when the class 'show' is added */
+        gap: 0;
     }
 
     nav ul li {
