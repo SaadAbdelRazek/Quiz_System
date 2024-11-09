@@ -1,4 +1,7 @@
 @extends('website.app.layout')
+@section('custom-meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('content')
 <div class="container">
 
@@ -6,6 +9,9 @@
     <div class="quiz-container">
         <div class="quiz-header">
             <h1>{{ $quiz->title }} Quiz</h1>
+            @if($quiz->quizzer->user_id != auth()->id())
+                <div id="timer" class="timer"><span id="time"></span></div>
+            @endif
         </div>
 
         <form id="quizForm" action="{{ route('quiz.submit', $quiz->id) }}" method="POST">
@@ -152,7 +158,8 @@
     </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+
+        document.addEventListener("DOMContentLoaded", function() {
         const duration = {{ $quiz->duration }} * 60; // Total duration in seconds
         const quizId = {{ $quiz->id }}; // Quiz ID
         const timerElement = document.getElementById('time');
@@ -165,56 +172,60 @@
         let remainingTime = localStorage.getItem(storageKey) ? parseInt(localStorage.getItem(storageKey)) : duration;
 
         function startTimer() {
-            const timer = setInterval(() => {
-                if (remainingTime <= 0) {
-                    clearInterval(timer);
-                    localStorage.removeItem(storageKey);
-                    submitFormViaAjax(); // Auto-submit the quiz
-                } else {
-                    remainingTime--;
-                    localStorage.setItem(storageKey, remainingTime);
-                    displayTime(remainingTime);
-                }
-            }, 1000);
-        }
+        const timer = setInterval(() => {
+        if (remainingTime <= 0) {
+        clearInterval(timer);
+        localStorage.removeItem(storageKey);
+        submitFormViaAjax(); // Auto-submit the quiz
+    } else {
+        remainingTime--;
+        localStorage.setItem(storageKey, remainingTime);
+        displayTime(remainingTime);
+    }
+    }, 1000);
+    }
 
         function displayTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const sec = seconds % 60;
-            timerElement.textContent = `Time Remaining: ${minutes}:${sec < 10 ? '0' : ''}${sec}`;
-        }
+        const minutes = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        timerElement.textContent = `Time Remaining: ${minutes}:${sec < 10 ? '0' : ''}${sec}`;
+    }
 
         function submitFormViaAjax() {
-            const formData = new FormData(formElement);
+        const formData = new FormData(formElement);
 
-            fetch(formElement.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: formData
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Quiz submitted successfully');
-                        localStorage.removeItem(storageKey);
-                        window.location.href = "/home/quizzes"; // Redirect after successful submission
-                    } else {
-                        alert('Failed to submit the quiz. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error submitting the quiz:', error);
-                    alert('An error occurred while submitting the quiz.');
-                });
-        }
+        fetch(formElement.action, {
+        method: 'POST',
+        headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+    },
+        body: formData
+    })
+        .then(response => {
+        if (response.ok) {
+        alert('Time is up! Your quiz has been submitted.');
+        localStorage.removeItem(storageKey);
+        window.location.href = "/home/quizzes"; // Redirect after successful submission
+    } else {
+        alert('Failed to submit the quiz. Please try again.');
+    }
+    })
+        .catch(error => {
+        console.error('Error submitting the quiz:', error);
+        alert('An error occurred while submitting the quiz.');
+    });
+    }
 
         displayTime(remainingTime); // Initial display of the timer
         startTimer(); // Start the timer
-        quizForm.addEventListener("submit", function(event) {
-            localStorage.removeItem(storageKey); // Remove quiz answers from localStorage after submission
-        });
+
+        // Clear the timer from localStorage upon manual submission
+        formElement.addEventListener("submit", function(event) {
+        localStorage.removeItem(storageKey);
     });
+    });
+
+
 
 </script>
 
