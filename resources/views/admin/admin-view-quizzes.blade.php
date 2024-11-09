@@ -160,7 +160,7 @@
                             <button class="copy-button" title="Copy Link" onclick="copyLink()">
                                 <i class="fas fa-copy"></i>
                             </button>
-                            <a href="{{ route('quiz_password', $quiz->access_token) }}" id="quiz_link" style="">{{ $quiz->access_token }}</a>
+                            <a href="{{ route('quiz_password', $quiz->access_token) }}" id="quiz_link"  style="">{{ $quiz->access_token }}</a>
                         </div>
                         <span id="copy-success" style="display: none; color: green; margin-left: 10px;">
                             <i class="fas fa-check-circle"></i> Copied!
