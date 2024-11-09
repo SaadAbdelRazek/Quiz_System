@@ -131,17 +131,11 @@
                     });
                 }
 
-<<<<<<< HEAD
                 displayTime(remainingTime); // Initial display of the timer
                 startTimer(); // Start the timer
                 quizForm.addEventListener("submit", function(event) {
                     localStorage.removeItem(storageKey); // Remove quiz answers from localStorage after submission
                 });
-=======
-                // تحديث العداد وبدء تشغيل المؤقت
-                displayTime(remainingTime);
-                startTimer();
->>>>>>> 00050b1119ce5f1292e74e03f101ae7eabfd0867
             });
         </script>
 

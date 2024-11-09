@@ -38,5 +38,7 @@ class QuizAccess
             }
             return redirect()->back();
         }
+
+        // if($routeName == )
     }
 }

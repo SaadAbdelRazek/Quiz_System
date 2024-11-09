@@ -37,6 +37,35 @@ class Handler extends ExceptionHandler
     ];
 
     /**
+     * Render an exception into an HTTP response.
+     */
+    public function render($request, Throwable $exception)
+    {
+        // تحقق مما إذا كان الطلب من نوع GET ويحاول الوصول إلى route يتطلب POST
+        if ($request->isMethod('get') && $this->isPostRoute($request)) {
+            return response()->json([
+                'message' => 'Unauthorized access to this route.'
+            ], 403);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    /**
+     * دالة للتحقق من أن الراوت يتطلب POST
+     */
+    protected function isPostRoute($request)
+    {
+        // اضافة اسماء الروابط الخاصة بالـ POST هنا
+        $postRoutes = [
+            'post-route-name', // قم باستبدالها بأسماء الروابط الخاصة بك
+            'another-post-route-name'
+        ];
+
+        return in_array($request->route()->getName(), $postRoutes);
+    }
+
+    /**
      * Register the exception handling callbacks for the application.
      *
      * @return void
