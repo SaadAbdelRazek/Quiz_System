@@ -7,7 +7,6 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizzerController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StandingController;
 use App\Http\Controllers\UserActivityController;
 use App\Http\Controllers\UserController;
