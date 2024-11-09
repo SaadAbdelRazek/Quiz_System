@@ -83,6 +83,9 @@
                     <div class="question-container">
                         <div class="question-header">
                             <div style="display: flex; justify-content: space-between">
+                                <span>
+                                    <button type="button" class="btn btn-danger" onclick="deleteQuestion({{ $question->id }})" style="background-color: red"><i class="fas fa-trash"></i></button>
+                                </span>
                                 <label for="question-{{ $index }}">Question {{ $index + 1 }}:</label>
                                 <span>
                                     <input type="number" name="questions[{{ $index }}][points]"
@@ -96,7 +99,8 @@
 
                         <input type="hidden" name="questions[{{ $index }}][id]" value="{{ $question->id }}">
 
-                        @if ($question->question_type === 'multiple_choice')
+
+                    @if ($question->question_type === 'multiple_choice')
                             <h4 class="choices-heading">Choices</h4>
                             <div class="choices-container">
                                 @foreach ($question->answers as $i => $answer)
@@ -113,6 +117,7 @@
                                         <input type="hidden"
                                             name="questions[{{ $index }}][answers][{{ $i }}][id]"
                                             value="{{ $answer->id }}">
+
                                     </div>
                                 @endforeach
                             </div>
@@ -153,6 +158,7 @@
                                             <input type="hidden"
                                                 name="questions[{{ $index }}][answers][{{ $i }}][id]"
                                                 value="{{ $answer->id }}">
+
                                         </div>
 
 
@@ -176,5 +182,31 @@
         </div>
     </div>
     <script src="{{asset('js/admin-update-quiz.js')}}">
+    </script>
+    <script>
+        function deleteQuestion(questionId) {
+            if (confirm('Are you sure you want to delete this question?')) {
+                fetch(`/questions/${questionId}/delete`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Question deleted successfully');
+                            location.reload(); // Refresh the page
+                        } else {
+                            alert('Failed to delete the question');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the question');
+                    });
+            }
+        }
     </script>
 @endsection

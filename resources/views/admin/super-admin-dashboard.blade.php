@@ -39,7 +39,14 @@
                 </div>
             </section>
             <section class="table">
-                <h2>Recent Activities</h2>
+                <div class="activities-header">
+                    <h2>Recent Activities</h2>
+                    <form action="{{ route('user-activities.deleteAll') }}" method="POST" id="deleteAllActivitiesForm">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete all activities?')" class="btn btn-danger">Delete All Activities</button>
+                    </form>
+                </div>
                 <table>
                     <thead>
                     <tr>

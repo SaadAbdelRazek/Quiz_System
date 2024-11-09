@@ -9,6 +9,7 @@ use App\Http\Controllers\QuizzerController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StandingController;
+use App\Http\Controllers\UserActivityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExamineeController;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +76,9 @@ Route::middleware([
     Route::get('/admin/reports', [ReportController::class, 'viewReportsPage'])->name('reports');
     Route::get('/admin/add-questions/{quizId}', [QuestionController::class, 'addQuestionsView'])->name('questions.add.view');
     Route::post('/admin/{id}/add-questions', [QuestionController::class, 'addQuestions'])->name('questions.add');
+    Route::delete('/questions/{question}/delete', [QuestionController::class, 'destroy'])->name('questions.destroy');
+    Route::delete('/user-activities/delete-all', [UserActivityController::class, 'deleteAllActivities'])->name('user-activities.deleteAll');
+
 });
 
 Route::get('start_create_quiz/{user_id}', [QuizzerController::class, 'index'])->name('start_create_quiz')->middleware(['auth', 'verified']);
@@ -120,3 +124,4 @@ Route::get('/refresh-session', function () {
 Route::get('/keep-alive', function () {
     return response()->json(['status' => 'Session kept alive']);
 })->name('keep-alive');
+

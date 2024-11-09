@@ -84,4 +84,22 @@ class QuestionController extends Controller
 
     }
 
+    public function destroy($id)
+    {
+        try {
+            // Retrieve the question along with its answers
+            $question = Question::with('answers')->findOrFail($id);
+
+            // Delete the answers associated with the question
+            $question->answers()->delete();
+
+            // Delete the question itself
+            $question->delete();
+
+            return response()->json(['success' => true, 'message' => 'Question and its answers deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to delete the question']);
+        }
+    }
+
 }
