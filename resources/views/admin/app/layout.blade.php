@@ -12,28 +12,30 @@
 </head>
 
 <body>
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <div class="dashboard-container">
-
         <aside class="sidebar">
             <h2>Admin Panel</h2>
             <nav>
-                <ul>
+                <div class="hamburger-menu" id="hamburgerMenu" onclick="toggleSidebar()">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+
+                <ul id="sidebarMenu" class="sidebar-menu">
                     @if (auth()->user()->role === 'SuperAdmin')
                         <li><a href="{{ route('admin-dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('admin-view-users') }}">Users</a></li>
 
                         <!-- Add Quiz Dropdown -->
                         <li class="sidebar-dropdown" id="quizDropdown">
-                            <a href="#" onclick="toggleSidebarDropdown(event)">Quizzes <i
-                                    class="fas fa-solid fa-caret-down" style="color: white; margin-left:50px"></i></a>
+                            <a href="#" onclick="toggleSidebarDropdown(event)">Quizzes <i class="fas fa-solid fa-caret-down" style="color: white; margin-left:50px"></i></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('view-create-quiz') }}">Create New Quiz</a></li>
                                 <li><a href="{{ route('admin-view-quizzes') }}">Manage All Quizzes</a></li>
                             </ul>
                         </li>
 
-                        <li><a href="{{ route('admin-view-quizzes') }}">All Quizzes</a></li>
                         <li><a href="#">Standing</a></li>
                         <li><a href="{{ route('admin-view-contacts') }}">Contacts</a></li>
                         <li><a href="{{route('reports')}}">Reports</a></li>
@@ -43,8 +45,7 @@
 
                         <!-- Add Quiz Dropdown -->
                         <li class="sidebar-dropdown" id="quizDropdown">
-                            <a href="#" onclick="toggleSidebarDropdown(event)">Quizzes <i
-                                    class="fas fa-solid fa-caret-down" style="color: white; margin-left:50px"></i></a>
+                            <a href="#" onclick="toggleSidebarDropdown(event)">Quizzes <i class="fas fa-solid fa-caret-down" style="color: white; margin-left:50px"></i></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('view-create-quiz') }}">Create New Quiz</a></li>
                                 <li><a href="{{ route('admin-view-quizzes') }}">Your Quizzes</a></li>
@@ -52,17 +53,9 @@
                         </li>
 
                         <li><a href="{{route('reports')}}">Reports</a></li>
-                        {{-- <li><a href="#">Settings</a></li> --}}
                     @endif
                     <li><a href="{{ route('home') }}">Return to Website</a></li>
                 </ul>
-                <script>
-                    // التحكم في إظهار الشريط الجانبي عند الضغط على الزر
-                    function toggleSidebar() {
-                        const sidebar = document.querySelector('.sidebar');
-                        sidebar.classList.toggle('active');
-                    }
-                </script>
                 <style>
                     /* تنسيق القائمة الجانبية */
 
@@ -104,6 +97,72 @@
                     .sidebar-dropdown.active .sidebar-submenu {
                         display: block;
                     }
+
+                    .hamburger-menu {
+                        display: none;
+                        flex-direction: column;
+                        cursor: pointer;
+                        width: 30px;
+                        height: 25px;
+                        justify-content: space-between;
+                    }
+
+                    .hamburger-menu .bar {
+                        background-color: white;
+                        height: 4px;
+                        width: 100%;
+                        border-radius: 5px;
+                    }
+
+                    /* Hide the menu by default on mobile */
+                    .sidebar-menu {
+                        display: block;
+                        list-style: none;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    .sidebar-menu li {
+                        padding: 10px;
+                    }
+
+                    .sidebar-menu a {
+                        text-decoration: none;
+                        color: white;
+                        font-size: 16px;
+                    }
+
+                    /* Media Queries */
+                    @media (max-width: 768px) {
+                        /* Show the hamburger icon only on mobile */
+                        .hamburger-menu {
+                            display: flex;
+                        }
+
+                        /* Hide the sidebar menu by default on mobile */
+                        .sidebar-menu {
+                            display: none;
+                            background-color: #333;
+                            width: 100%;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            z-index: 9999;
+                            padding-top: 60px;
+                        }
+
+                        .sidebar-menu.show {
+                            display: block;
+                        }
+
+                        .sidebar-menu li {
+                            text-align: center;
+                        }
+
+                        .sidebar-menu a:hover {
+                            background-color: #444;
+                        }
+                    }
                 </style>
 
                 <script>
@@ -125,6 +184,37 @@
 
                         if (savedState === 'active') {
                             dropdown.classList.add('active');
+                        }
+                    });
+                </script>
+                <script>
+                    // Function to toggle the sidebar menu visibility
+                    function toggleSidebar() {
+                        const menu = document.getElementById('sidebarMenu');
+                        const hamburger = document.getElementById('hamburgerMenu');
+
+                        // Toggle the 'show' class to show or hide the sidebar menu
+                        menu.classList.toggle('show');
+
+                        // Toggle the hamburger icon (optional)
+                        hamburger.classList.toggle('active');
+                    }
+
+                    // Function to toggle sidebar dropdown visibility
+                    function toggleSidebarDropdown(event) {
+                        event.preventDefault();
+                        const dropdown = event.target.parentElement;
+                        dropdown.classList.toggle('active');
+                    }
+
+                    // Close sidebar if click is outside of it
+                    document.addEventListener('click', function(event) {
+                        const menu = document.getElementById('sidebarMenu');
+                        const hamburger = document.getElementById('hamburgerMenu');
+
+                        // Close menu if clicked outside of sidebar or hamburger icon
+                        if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                            menu.classList.remove('show');
                         }
                     });
                 </script>

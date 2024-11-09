@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
     background-color: #f4f7f8;
     color: #333;
 }
@@ -127,110 +127,74 @@ table th {
     background-color: #f1f1f1;
 }
 
-.sidebar {
+/* .sidebar {
     display: block;
-}
+} */
 
-#quiz-link{
-    padding:10px;
-    border:none;
+#quiz-link {
+    padding: 10px;
+    border: none;
     background-color: unset;
-    width:fit-content;
-    color:rgb(31, 93, 179);
+    width: fit-content;
+    color: rgb(31, 93, 179);
 }
 
 /* @media لشاشات العرض الصغيرة */
+
+
+
 @media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
     .sidebar {
-        transform: translateX(-100%);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 150px;
-        padding: 5px;
-        height: 100vh;
-        z-index: 1000;
+        width: 100%;
+        position: static;
     }
 
     .sidebar h2 {
         font-size: 14px;
     }
 
-
-    .sidebar nav ul li {
+    /* .sidebar nav ul li {
         margin: 0;
-    }
+    } */
 
     .sidebar nav ul li a {
         font-size: 11px;
-        text-align: left;
-
+        /* text-align: left; */
     }
 
-    #quiz_link{
-        padding:2px;
-        width:fit-content;
+    #quiz_link {
+        padding: 2px;
+        width: fit-content;
         font-size: 7px;
     }
 
-    #copy-button i{
+    #copy-button i {
         width: 20px;
         font-size: 5px;
     }
-    #action-td{
+    #action-td {
         padding: 1px;
     }
-    #action-td i{
+    #action-td i {
         font-size: 9px;
-    }
-
-    /* زر عرض الشريط الجانبي */
-    .sidebar-toggle {
-        display: block;
-        text-align: center;
-        background-color: #333;
-        color: #fff;
-        border: none;
-        /* padding: 10px 20px; */
-        cursor: pointer;
-
-        max-width: fit-content;
-        width: 20%;
-        margin-left: 90%;
-        /* margin: 10px; */
-    }
-
-
-    /* إظهار الشريط الجانبي عند الضغط */
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    /* عرض الشريط الجانبي عند النقر */
-    .sidebar.show-sidebar {
-        display: block;
-        width: 100%;
-        background-color: #f1f1f1;
-        padding: 10px 0;
     }
 
     .sidebar nav ul li {
         text-align: center;
-        padding: 5px 0; /* تحسين المساحة الداخلية لكل عنصر */
-        font-size: 12px;
+        padding: 0;
     }
 
     .stats {
-        display: flex;
-        flex-direction: row; /* تكديس البطاقات في عمود */
-        width: 100%; /* تأكد من أن البطاقات تشغل العرض بالكامل */
-        align-items: center; /* لمركزية البطاقات */
+        flex-direction: column; /* Stack the stat cards on smaller screens */
     }
 
     .stat-card {
-        width: 90%; /* جعل البطاقات تشغل عرضًا أضيق لترك بعض المساحة على الجوانب */
         margin-right: 0;
-        margin-bottom: 15px; /* إضافة مسافة بين البطاقات المتكدسة */
+        margin-bottom: 15px; /* Add space between stacked cards */
     }
 
     .table {
@@ -261,12 +225,11 @@ table th {
         background-color: #f1f1f1;
     }
 }
-@media (min-width: 769px) {
-    .sidebar-toggle {
-        display: none;
-    }
-}
 
+
+@media (min-width: 769px) {
+
+}
 
 .container {
     max-width: 900px; /* Maximum width for larger screens */
@@ -304,12 +267,10 @@ input[type="password"],
     border-radius: 4px; /* Rounded corners for inputs */
 }
 
-
-
 button {
     width: 100%; /* Full width for buttons */
     padding: 10px; /* Padding inside the button */
-    background-color: #4A90E2; /* Button background color */
+    background-color: #4a90e2; /* Button background color */
     color: white; /* Button text color */
     border: none; /* No border */
     border-radius: 4px; /* Rounded corners for button */
@@ -319,7 +280,7 @@ button {
 }
 
 button:hover {
-    background-color: #357ABD; /* Darker color on hover */
+    background-color: #357abd; /* Darker color on hover */
 }
 
 .questions-container {
@@ -370,9 +331,8 @@ button:hover {
         margin-bottom: 10px; /* Adjust margin for small devices */
     }
 
-    #dur-att{
+    #dur-att {
         display: block;
-
     }
 
     button {
@@ -396,13 +356,13 @@ select {
 
 /* Optional: Style for the dropdown arrow */
 select:focus {
-    border-color: #4A90E2; /* Change border color on focus */
+    border-color: #4a90e2; /* Change border color on focus */
     outline: none; /* Remove default outline */
 }
 
 /* Add a custom dropdown arrow */
 select::after {
-    content: '▼'; /* Down arrow character */
+    content: "▼"; /* Down arrow character */
     position: absolute;
     right: 10px; /* Position the arrow */
     top: 50%; /* Center the arrow vertically */
@@ -418,7 +378,7 @@ select::after {
 
 /* Style for the custom dropdown arrow (optional) */
 .select-container::after {
-    content: '▼'; /* Down arrow character */
+    content: "▼"; /* Down arrow character */
     position: absolute;
     right: 10px; /* Position the arrow */
     top: 50%; /* Center the arrow vertically */

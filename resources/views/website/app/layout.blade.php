@@ -132,7 +132,7 @@
 .footer-section h3 {
     font-size: 18px;
     margin-bottom: 15px;
-    color: #f39c12;
+    color: #3c95dd;
 }
 
 .footer-section p, .footer-section a {
@@ -155,7 +155,7 @@
 }
 
 .footer-section ul li a:hover {
-    color: #f39c12;
+    color: #3c95dd;
 }
 
 .social-icons a {
@@ -166,7 +166,7 @@
 }
 
 .social-icons a:hover {
-    color: #f39c12;
+    color: #3c95dd;
 }
 
 .footer-bottom {
@@ -182,7 +182,7 @@
 }
 
 .footer-bottom a:hover {
-    color: #f39c12;
+    color: #3c95dd;
 }
 
 </style>

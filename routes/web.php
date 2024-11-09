@@ -109,11 +109,14 @@ Route::post('quiz/private/{id}', [QuizController::class, 'view_private_quiz'])->
 Route::get('/search-quizzes', [QuizController::class, 'searchQuizzes'])->middleware(['auth', 'verified']);
 Route::get('/search', [SearchController::class, 'search'])->name('search')->middleware(['auth', 'verified']);
 Route::post('/contact', [ContactController::class, 'store'])->middleware('handleRouteErrors')->name('contact.store')->middleware(['auth', 'verified']);
-Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->middleware('handleRouteErrors')->name('quiz.submit')->middleware(['auth', 'verified']);
-Route::get('/keep-alive', function () {
-    return response()->json(['status' => 'Session kept alive']);
-})->name('keep-alive');
+
+Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submitQuiz'])->middleware('handleRouteErrors')->middleware(['auth', 'verified'])->name('quiz.submit');
+
 
 Route::get('/refresh-session', function () {
     return response()->json(['token' => csrf_token()]);
 });
+
+Route::get('/keep-alive', function () {
+    return response()->json(['status' => 'Session kept alive']);
+})->name('keep-alive');
