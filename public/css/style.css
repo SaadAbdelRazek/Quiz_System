@@ -60,6 +60,7 @@ nav ul {
     list-style-type: none;
     display: flex;
     gap: 20px;
+    align-items: center;
 }
 
 nav ul li a {
@@ -336,6 +337,7 @@ nav ul li a:hover {
 
 .contact-section p {
     font-size: 18px;
+    font-weight: 700;
 }
 
 .contact-section a {

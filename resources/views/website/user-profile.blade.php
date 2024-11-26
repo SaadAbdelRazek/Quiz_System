@@ -2,19 +2,30 @@
 @section('content')
     <section class="profile-section">
         <div class="container">
-            <div class="profile-header">
-                @if ($user_data->profile_photo_path)
-                    <img src="{{ asset('storage/' . $user_data->profile_photo_path) }}" alt="{{ $user_data->name }}"
-                        class="profile-picture">
-                @else
-                    <img src="{{ asset('images/def.jpg') }}" alt="{{ $user_data->name }}" class="profile-picture">
-                @endif
-                <div class="user-info">
-                    <h1>{{ $user->name }}</h1>
-                    <p>Email: {{ $user->email }}</p>
+            <div class="profile-header" style="justify-content: space-between">
+                <div style="display: flex; align-items:center">
+
+                    @if ($user_data->profile_photo_path)
+                        <img src="{{ asset('storage/' . $user_data->profile_photo_path) }}" alt="{{ $user_data->name }}"
+                            class="profile-picture">
+                    @else
+                        <img src="{{ asset('images/def.jpg') }}" alt="{{ $user_data->name }}" class="profile-picture">
+                    @endif
+                    <div class="user-info">
+                        <h1>{{ $user->name }}</h1>
+                        <p>Email: {{ $user->email }}</p>
+                    </div>
                 </div>
-                <button onclick="window.location.href='{{ url('/user/profile') }}'" class="edit-profile-btn">Edit
-                    Profile</button>
+                <div>
+
+                    <button onclick="window.location.href='{{ url('/user/profile') }}'" class="edit-profile-btn">Edit
+                        Profile</button>
+                        @if ($user->role == 'admin' || $user->role == 'SuperAdmin')
+
+                        <button onclick="window.location.href='{{ url('/admin-dashboard') }}'" class="edit-profile-btn">Dashboard</button>
+                        @endif
+
+                </div>
             </div>
 
             <div class="profile-stats">
@@ -22,14 +33,14 @@
                     <h3>Completed Quizzes</h3>
                     <p>{{ $uniqueQuizCount }}</p>
                 </div>
-                {{-- <div class="stat-box">
+                <div class="stat-box">
                     <h3>Highest Score</h3>
                     <p>{{ round($highestScore, 2) }}%</p>
                 </div>
                 <div class="stat-box">
                     <h3>Average Score</h3>
                     <p>{{ round($averageScore, 2) }}%</p>
-                </div> --}}
+                </div>
             </div>
 
             <div class="quiz-activity">

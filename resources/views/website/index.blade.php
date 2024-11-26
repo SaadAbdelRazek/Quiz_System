@@ -221,16 +221,16 @@
         <div class="form-container">
             <img src="{{ asset('images/contact.jpg') }}" class="contact-img" alt="Contact Image">
             <form id="contact-form" action="{{ route('contact.store') }}" method="POST">
-                <p>We are happy to inform you of your problem and we will respond to you as soon as possible!</p>
+                <p>We are happy to inform us of your problem</p>
                 @csrf
                 @if (!Auth::check())
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
+                        {{-- <label for="name">Name</label> --}}
+                        <input type="text" id="name" name="name" required placeholder="Name">
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        {{-- <label for="email">Email</label> --}}
+                        <input type="email" id="email" name="email" required placeholder="Email">
                     </div>
                 @endif
                 <div class="form-group">
@@ -260,7 +260,7 @@
         .contact-img {
             width: 100%;
             max-width: 500px; /* Max width for image */
-            height: auto;
+            height: 400px;
             border-radius: 10px;
             object-fit: cover; /* Ensure the image fits well */
         }
@@ -272,7 +272,7 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
         }
 
         form p {
@@ -297,7 +297,7 @@
             width: 100%;
             padding: 10px;
             font-size: 14px;
-            border: 1px solid #ccc;
+            border: 1px solid #e6e1e1;
             border-radius: 4px;
         }
 

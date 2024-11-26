@@ -21,7 +21,7 @@
 @section('content')
     <div class="container">
         @if (auth()->user()->role == 'SuperAdmin')
-        <h3>All quizzes</h3>
+        <h3 style="margin: 10px">All quizzes</h3>
         <table class="table">
             <thead>
             <tr>
@@ -122,7 +122,7 @@
         {{-- <a class="a-table" href="{{route('admin-view-examinees')}}">show all of examinees</a> --}}
         @endif
 
-        <h3>your Quizzes</h3>
+        <h3 style="margin: 10px">your Quizzes</h3>
         <table class="table">
             <thead>
             <tr>

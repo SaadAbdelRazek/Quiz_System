@@ -36,8 +36,8 @@
                             </ul>
                         </li>
 
-                        <li><a href="#">Standing</a></li>
-                        <li><a href="{{ route('admin-view-contacts') }}">Contacts</a></li>
+                        {{-- <li><a href="#">Standing</a></li> --}}
+                        <li><a href="{{ route('admin-view-contacts') }}">Feedbacks</a></li>
                         <li><a href="{{route('reports')}}">Reports</a></li>
                         {{-- <li><a href="#">Settings</a></li> --}}
                     @elseif (auth()->user()->role === 'admin')
